@@ -1,0 +1,41 @@
+#Projekt zaliczeniowy z Programowania Zespołowego
+
+Projekt zakłada, że użytkownik posiada zainstalowany język [Python 3.6](https://www.python.org/ftp/python/3.6.5/python-3.6.5-amd64.exe)
+Przy instalacji najlepiej zaznaczyć opcję z dodaniem do systemowego PATH.
+
+###Pobranie repozytorium w projektem
+
+Należy pobrać to repozytorium by móc uruchomić projekt.
+
+###(niewymagane) Stworzenie wirtualnego środowiska na potrzeby projektu
+
+Posiadając klon repozytorium należy stworzyć w nim wirtualne środowisko. 
+By to zrobić należy w konsoli systemowej przejść do katalogu z projektem a następnie
+wpisać następującą komendę:
+
+```bash
+python -m venv venv
+```
+
+Stworzy to w projekcie folder o nazwie `venv`.
+
+###Instalacja wymaganych pakietów
+
+Wymagane pakiety znajdują się w pliku `requirements.txt`. 
+By je zainstalować należy przejść do katalogu z projektem i w konsoli systemowej wpisać:
+
+```
+python -m pip install -r requirements.txt
+```
+
+###Włączenie projektu
+
+By włączyć projekt należy będąc w katalogu z projektem w konsoli systemowej wpisać:
+
+``` 
+python manage.py runserver
+```
+
+Sprawi ono, iż pod adresem [http://localhost:8000](http://localhost:8000) będzie dostępny projekt.
+Jeśli wszystko się udało, powinien pojawić się ekran powitalny.
+Dodatkowo w katalogu z projektem powinien pojawić się plik z bazą danych o nazwie `db.sqlite3`.
