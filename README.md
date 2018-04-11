@@ -17,12 +17,12 @@ wpisać następującą komendę:
 python -m venv venv
 ```
 
-Stworzy to w projekcie folder o nazwie `venv`.
+Stworzy to w projekcie katalog o nazwie `venv`.
 
 ### Instalacja wymaganych pakietów
 
 Wymagane pakiety znajdują się w pliku `requirements.txt`. 
-By je zainstalować należy przejść do katalogu z projektem i w konsoli systemowej wpisać:
+By je zainstalować w konsoli systemowej należy przejść do katalogu z projektem i wpisać:
 
 ```
 python -m pip install -r requirements.txt
@@ -31,7 +31,7 @@ python -m pip install -r requirements.txt
 ### Zastosowanie migracji na lokalnej bazie danych
 
 Ostatnim krokiem ustawiania środowiska jest zastosowanie migracji stworzonych w projekcie.
-By je zainstalować należy przejść do katalogu z projektem i w konsoli systemowej wpisać:
+W tym celu należy w konsoli systemowej przejść do katalogu z projektem i wpisać:
 
 ```
 python manage.py migrate
