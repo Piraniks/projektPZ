@@ -17,7 +17,11 @@ wpisać następującą komendę:
 python -m venv venv
 ```
 
-Stworzy to w projekcie katalog o nazwie `venv`.
+Stworzy to w projekcie katalog o nazwie `venv`. Następnie należy aktywować stworzone środowisko.
+
+```
+venv\Scripts/activate
+```
 
 ### Instalacja wymaganych pakietów
 
