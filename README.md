@@ -28,6 +28,15 @@ By je zainstalować należy przejść do katalogu z projektem i w konsoli system
 python -m pip install -r requirements.txt
 ```
 
+### Zastosowanie migracji na lokalnej bazie danych
+
+Ostatnim krokiem ustawiania środowiska jest zastosowanie migracji stworzonych w projekcie.
+By je zainstalować należy przejść do katalogu z projektem i w konsoli systemowej wpisać:
+
+```
+python manage.py migrate
+```
+
 ### Włączenie projektu
 
 By włączyć projekt należy będąc w katalogu z projektem w konsoli systemowej wpisać:
