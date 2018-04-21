@@ -237,7 +237,6 @@ class LogoutUserTestCase(TestCase):
         self.assertRedirects(response, reverse('index'))
 
     def test_logouts_logged_in_user(self):
-        client = Client()
         username = 'username'
         password = 'password'
 
@@ -245,7 +244,7 @@ class LogoutUserTestCase(TestCase):
         user.set_password(password)
         user.save()
 
-        client.login(username=username, password=password)
-        response = client.get('/logout/')
+        self.client.login(username=username, password=password)
+        response = self.client.get('/logout/')
 
         self.assertRedirects(response, reverse('index'))
