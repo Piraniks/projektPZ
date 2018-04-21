@@ -19,8 +19,10 @@ class RegisterView(View):
         form = RegisterForm(request.POST)
 
         if not form.is_valid():
-            errors = form.errors
-            return render(request, self.REGISTER_TEMPLATE_PATH, context={'errors': errors})
+            context = {
+                'errors': form.errors.as_json()
+            }
+            return render(request, self.REGISTER_TEMPLATE_PATH, context=context)
 
         cleaned_data = form.cleaned_data
         username = cleaned_data.get('username')
@@ -35,7 +37,11 @@ class RegisterView(View):
                 new_user.save()
         except IntegrityError:
             context = {
-                'error_messages': ['User with given username exists.']
+                "errors": {
+                    "username": [{
+                        "message": "User with given username exists already."
+                    }],
+                }
             }
             return render(request, self.REGISTER_TEMPLATE_PATH, context=context)
 
@@ -43,17 +49,20 @@ class RegisterView(View):
 
 
 class LoginView(View):
+    LOGIN_TEMPLATE_PATH = 'auth/login.html'
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return redirect('index')
-        return render(request, 'auth/login.html')
+        return render(request, self.LOGIN_TEMPLATE_PATH)
 
     def post(self, request, *args, **kwargs):
         form = LoginForm(request.POST)
         if not form.is_valid():
-            errors = form.errors
-            return render(request, 'auth/login.html', context={'errors': errors})
+            context = {
+                'errors': form.errors.as_json()
+            }
+            return render(request, self.LOGIN_TEMPLATE_PATH, context=context)
 
         cleaned_data = form.cleaned_data
         username = cleaned_data.get('username')
@@ -63,9 +72,13 @@ class LoginView(View):
 
         if user is None:
             context = {
-                'error_messages': ['No user exists with given credentials.']
+                "errors": {
+                    "user": [{
+                        "message": "No user exists with given credentials."
+                    }],
+                }
             }
-            return render(request, 'auth/login.html', context=context)
+            return render(request, self.LOGIN_TEMPLATE_PATH, context=context)
 
         login(request, user)
         return redirect('index')
