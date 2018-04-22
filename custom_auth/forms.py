@@ -18,5 +18,5 @@ class RegisterForm(forms.Form):
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(max_length=64)
+    username = forms.CharField(max_length=64, validators=[username_validator])
     password = forms.CharField(widget=forms.PasswordInput())

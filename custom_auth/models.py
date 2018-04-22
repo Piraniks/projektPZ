@@ -14,5 +14,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
 
+    class Meta:
+        ordering = ['-id']
+
     def __str__(self):
         return self.username
