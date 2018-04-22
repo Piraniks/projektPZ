@@ -1,7 +1,7 @@
 from django.views.generic import View
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from django.db import transaction, IntegrityError
+from django.db import IntegrityError
 
 from custom_auth.forms import RegisterForm, LoginForm
 from custom_auth.models import User
@@ -28,13 +28,9 @@ class RegisterView(View):
         username = cleaned_data.get('username')
         password = cleaned_data.get('password')
 
-        new_user = User(username=username)
-        new_user.set_password(password)
-
         # Save as an atomic operation
         try:
-            with transaction.atomic():
-                new_user.save()
+            User.objects.create_user(username, password)
         except IntegrityError:
             context = {
                 "errors": {
