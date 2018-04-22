@@ -1,11 +1,11 @@
-from django.test import TestCase, Client
+from django.test import TestCase, Client, TransactionTestCase
 from django.shortcuts import reverse
 from rest_framework import status
 
 from custom_auth.models import User
 
 
-class RegisterUserTestCase(TestCase):
+class RegisterUserTestCase(TransactionTestCase):
     def setUp(self):
         client = Client()
 
@@ -18,9 +18,7 @@ class RegisterUserTestCase(TestCase):
         username = 'username'
         password = 'password'
 
-        user = User(username=username)
-        user.set_password(password)
-        user.save()
+        User.objects.create_user(username, password)
 
         self.client.login(username=username, password=password)
         response = self.client.get('/register/')
@@ -43,7 +41,7 @@ class RegisterUserTestCase(TestCase):
         self.assertIsNotNone(user)
         self.assertRedirects(response, reverse('index'))
 
-    def test_create_with_invalid_passwords(self):
+    def test_create_with_empty_passwords(self):
         username = 'username'
         password = ''
 
@@ -59,7 +57,7 @@ class RegisterUserTestCase(TestCase):
         self.assertIsNone(user)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_create_with_invalid_username(self):
+    def test_create_with_empty_username(self):
         username = ''
         password = 'password'
 
@@ -75,7 +73,23 @@ class RegisterUserTestCase(TestCase):
         self.assertIsNone(user)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_create_with_not_matching_passwords(self):
+    def test_create_with_not_valid_signs_in_username(self):
+        username = 'in\/alid_username'
+        password = 'password'
+
+        data = {
+            'username': username,
+            'password': password,
+            'password_confirm': password
+        }
+        response = self.client.post('/register/', data)
+
+        user = User.objects.filter(username=username).first()
+
+        self.assertIsNone(user)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_create_with_different_passwords(self):
         username = 'username'
         password = 'password'
         other_password = 'other_password'
@@ -97,11 +111,7 @@ class RegisterUserTestCase(TestCase):
         password = 'password'
         other_password = 'other_password'
 
-        user = User(username=username)
-        user.set_password(password)
-        user.save()
-
-        self.assertIsNotNone(user)
+        User.objects.create_user(username, password)
 
         data = {
             'username': username,
@@ -131,23 +141,17 @@ class LoginUserTestCase(TestCase):
         username = 'username'
         password = 'password'
 
-        user = User(username=username)
-        user.set_password(password)
-        user.save()
+        User.objects.create_user(username, password)
 
         self.client.login(username=username, password=password)
         response = self.client.get('/login/')
 
         self.assertRedirects(response, reverse('index'))
 
-    def test_create_with_invalid_password(self):
+    def test_login_with_empty_password(self):
         username = 'username'
         password = ''
 
-        user = User(username=username)
-        user.set_password(password)
-        user.save()
-
         data = {
             'username': username,
             'password': password
@@ -158,14 +162,10 @@ class LoginUserTestCase(TestCase):
         self.assertTrue(response_user.is_anonymous)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_create_with_invalid_username(self):
+    def test_login_with_empty_username(self):
         username = ''
         password = 'password'
 
-        user = User(username=username)
-        user.set_password(password)
-        user.save()
-
         data = {
             'username': username,
             'password': password
@@ -176,7 +176,7 @@ class LoginUserTestCase(TestCase):
         self.assertTrue(response_user.is_anonymous)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_create_with_notexisting_user_credentials(self):
+    def test_login_with_notexisting_user_credentials(self):
         username = 'username'
         password = 'password'
 
@@ -190,14 +190,12 @@ class LoginUserTestCase(TestCase):
         self.assertTrue(response_user.is_anonymous)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_create_with_incorrect_password(self):
+    def test_login_with_incorrect_password(self):
         username = 'username'
         password = 'password'
         incorrect_password = 'incorrect_password'
 
-        user = User(username=username)
-        user.set_password(password)
-        user.save()
+        User.objects.create_user(username, password)
 
         data = {
             'username': username,
@@ -209,13 +207,11 @@ class LoginUserTestCase(TestCase):
         self.assertTrue(response_user.is_anonymous)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_create_with_valid_data(self):
+    def test_login_with_valid_data(self):
         username = 'username'
         password = 'password'
 
-        user = User(username=username)
-        user.set_password(password)
-        user.save()
+        User.objects.create_user(username, password)
 
         data = {
             'username': username,
@@ -240,9 +236,7 @@ class LogoutUserTestCase(TestCase):
         username = 'username'
         password = 'password'
 
-        user = User(username=username)
-        user.set_password(password)
-        user.save()
+        User.objects.create_user(username, password)
 
         self.client.login(username=username, password=password)
         response = self.client.get('/logout/')
