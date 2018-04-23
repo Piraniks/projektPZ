@@ -8,27 +8,26 @@ from custom_auth.models import User
 
 
 class RegisterView(View):
-    REGISTER_TEMPLATE_PATH = 'auth/register.html'
+    TEMPLATE_PATH = 'auth/register.html'
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         if request.user.is_authenticated:
             return redirect('index')
-        return render(request, self.REGISTER_TEMPLATE_PATH)
+        return render(request, self.TEMPLATE_PATH)
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         form = RegisterForm(request.POST)
 
         if not form.is_valid():
             context = {
-                'errors': form.errors.as_json()
+                "errors": form.errors.as_json()
             }
-            return render(request, self.REGISTER_TEMPLATE_PATH, context=context)
+            return render(request, self.TEMPLATE_PATH, context=context)
 
         cleaned_data = form.cleaned_data
         username = cleaned_data.get('username')
         password = cleaned_data.get('password')
 
-        # Save as an atomic operation
         try:
             User.objects.create_user(username, password)
         except IntegrityError:
@@ -39,26 +38,27 @@ class RegisterView(View):
                     }],
                 }
             }
-            return render(request, self.REGISTER_TEMPLATE_PATH, context=context)
+            return render(request, self.TEMPLATE_PATH, context=context)
 
         return redirect('index')
 
 
 class LoginView(View):
-    LOGIN_TEMPLATE_PATH = 'auth/login.html'
+    TEMPLATE_PATH = 'auth/login.html'
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         if request.user.is_authenticated:
             return redirect('index')
-        return render(request, self.LOGIN_TEMPLATE_PATH)
+        return render(request, self.TEMPLATE_PATH)
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         form = LoginForm(request.POST)
+
         if not form.is_valid():
             context = {
-                'errors': form.errors.as_json()
+                "errors": form.errors.as_json()
             }
-            return render(request, self.LOGIN_TEMPLATE_PATH, context=context)
+            return render(request, self.TEMPLATE_PATH, context=context)
 
         cleaned_data = form.cleaned_data
         username = cleaned_data.get('username')
@@ -74,12 +74,12 @@ class LoginView(View):
                     }],
                 }
             }
-            return render(request, self.LOGIN_TEMPLATE_PATH, context=context)
+            return render(request, self.TEMPLATE_PATH, context=context)
 
         login(request, user)
         return redirect('index')
 
 
-def logout_user(request, *args, **kwargs):
+def logout_user(request):
     logout(request)
     return redirect('index')
