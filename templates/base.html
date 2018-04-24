@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+     {% load static %}
+
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
+    <link type="text/css" rel="stylesheet" href="{% static 'assets/css/main.css' %}">
+</head>
+<body>
+
+
+<div id="page-wrapper">
+
+			<!-- Header -->
+				<header id="header">
+					<h1><a href="{% url 'index' %}">Blackbird &nbsp;  <i class="icon fa-fort-awesome fa-lg"></i></a> </h1>
+					<nav id="nav">
+						<ul>
+							<li><a href="{% url 'index' %}">Home</a></li>
+
+							<li><a href="#" class="button">Sign Up</a></li>
+						</ul>
+					</nav>
+				</header>
+
+			<!-- Main -->
+				<section id="main" class="container 50%">
+
+                        {% block content %}
+                        {% endblock %}
+
+				</section>
+
+    {% include "footer.html" %}
+
+		</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.dropotron.min.js"></script>
+			<script src="assets/js/jquery.scrollgress.min.js"></script>
+			<script src="assets/js/skel.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+			<script src="assets/js/main.js"></script>
+</body>
+</html>
