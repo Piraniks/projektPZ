@@ -1,5 +1,7 @@
 {% extends '../base.html' %}
-
+{% block button %}
+    <li><a href="{% url 'login' %}" class="button">Log in</a></li>
+    {% endblock %}
 {% block content %}
 
     <header>
