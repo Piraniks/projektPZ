@@ -16,19 +16,26 @@
 
 			<!-- Header -->
 				<header id="header" class="alt">
-					<h1><a href="{% url 'index' %}">Programowanie zespołowe &nbsp;  <i class="icon fa-fort-awesome fa-lg"></i></a> </h1>
+					<h1><a href="{% url 'index' %}">Blackbird &nbsp;  <i class="icon fa-fort-awesome fa-lg"></i></a> </h1>
 					<nav id="nav">
 						<ul>
-							<li><a href="{% url 'index' %}">Home</a></li>
-							<li><a href="{% url 'login' %}" class="button">Log in</a></li>
+                            {% if user.is_authenticated %}
+                                <li>Hi! {{ user.username }}</li>
+                                <li><a href="{% url 'logout' %}" class="button">Log out</a></li>
+
+							{% else %}
+                                <li><a href="{% url 'login' %}" class="button">Log in</a></li>
+                            {% endif %}
+
+
 						</ul>
 					</nav>
 				</header>
 
 			<!-- Banner -->
 				<section id="banner">
-					<h2>Alpha</h2>
-					<p>Another fine responsive site template freebie by HTML5 UP.</p>
+					<h2>Blackbird</h2>{{ user.username }}
+					<p>Super projekt</p>
 
 				</section>
 

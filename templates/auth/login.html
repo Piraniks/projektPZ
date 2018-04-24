@@ -1,15 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends '../base.html' %}
+
+{% block content %}
+
+    <header>
+        <h2>Login</h2>
+        <hr />
+    </header>
+
+    <div class="box">
+
     <form method="post" action="{% url 'login' %}">
-        {% csrf_token %}
-        <input type="text" name="username" id="username"><br>
-        <input type="password" name="password" id="password"><br>
-        <button type="submit" value="Submit"></button>
+    {% csrf_token %}
+        <div class="row uniform 50%">
+            <div class="12u">
+                <input type="text" name="username" id="username" placeholder="Username" required="required" autofocus
+                       required title="Enter your username" oninvalid="this.setCustomValidity('This field should not be left blank')"
+                       oninput="setCustomValidity('')"><br>
+            </div>
+        </div>
+        <div class="row uniform 50%">
+            <div class="12u">
+                <input type="password" name="password" id="password" placeholder="Password" required="required"
+                       required title="Enter your username" oninvalid="this.setCustomValidity('This field should not be left blank')"
+                       oninput="setCustomValidity('')"><br>
+            </div>
+        </div>
+        <div class="row uniform">
+            <div class="12u">
+                <ul class="actions align-center">
+                    <li><input class="button" type="submit" value="Log in" /></li>
+                </ul>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top:20px;">
+            Not signed up yet? <a href="{% url 'register' %}">Register</a>
+        </div>
     </form>
-</body>
-</html>
+
+    </div>
+
+{% endblock %}
+

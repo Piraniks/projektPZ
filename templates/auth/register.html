@@ -1,96 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Register</title>
-     {% load static %}
+{% extends '../base.html' %}
 
-    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
-    <link type="text/css" rel="stylesheet" href="{% static 'assets/css/main.css' %}">
-</head>
-<body>
+{% block content %}
 
+    <header>
+        <h2>Register</h2>
+        <hr />
+    </header>
 
-<div id="page-wrapper">
+    <div class="box">
+         <form method="post" action="{% url 'register' %}">
+         {% csrf_token %}
+            <div class="row uniform 50%">
+                <div class="12u">
+                    <input type="text" name="username" id="username" placeholder="Username" required="required" autofocus
+                           required title="Enter your username" oninvalid="this.setCustomValidity('This field should not be left blank')"
+                     oninput="setCustomValidity('')"/>
 
-			<!-- Header -->
-				<header id="header">
-					<h1><a href="{% url 'index' %}">Programowanie zespołowe &nbsp;  <i class="icon fa-fort-awesome fa-lg"></i></a> </h1>
-					<nav id="nav">
-						<ul>
-							<li><a href="{% url 'index' %}">Home</a></li>
+                </div>
+            </div>
+            <div class="row uniform 50%">
+                <div class="12u">
+                    <input type="password" name="password" id="password" placeholder="Password"
+                    required title="Enter your password" oninvalid="this.setCustomValidity('This field should not be left blank')"
+                     oninput="setCustomValidity('')"/>
+                </div>
+            </div>
+            <div class="row uniform 50%">
+                <div class="12u">
+                    <input type="password" name="password_confirm" id="password_confirm" placeholder="Confirm Password"
+                    required title="Confirm your password" oninvalid="this.setCustomValidity('Please, confirm your password')"
+                     oninput="setCustomValidity('')"/>
+                </div>
+            </div>
+            <div class="row uniform">
+                <div class="12u">
+                    <ul class="actions align-center">
+                        <li><input type="submit" value="Register" /></li>
+                    </ul>
+                </div>
+            </div>
+        </form>
+    </div>
 
-							<li><a href="#" class="button">Sign Up</a></li>
-						</ul>
-					</nav>
-				</header>
-
-			<!-- Main -->
-				<section id="main" class="container 50%">
-					<header>
-						<h2>Register</h2>
-						<hr />
-					</header>
-					<div class="box">
-						 <form method="post" action="{% url 'register' %}">
-                         {% csrf_token %}
-							<div class="row uniform 50%">
-								<div class="12u">
-                                    <input type="text" name="username" id="username" placeholder="Username" required="required" autofocus
-                                           required title="Enter your username" oninvalid="this.setCustomValidity('This field should not be left blank')"
-                                     oninput="setCustomValidity('')"/>
-
-								</div>
-							</div>
-							<div class="row uniform 50%">
-								<div class="12u">
-									<input type="password" name="password" id="password" placeholder="Password"
-                                    required title="Enter your password" oninvalid="this.setCustomValidity('This field should not be left blank')"
-                                     oninput="setCustomValidity('')"/>
-								</div>
-							</div>
-							<div class="row uniform 50%">
-								<div class="12u">
-									<input type="password" name="password_confirm" id="password_confirm" placeholder="Confirm Password"
-                                    required title="Confirm your password" oninvalid="this.setCustomValidity('Please, confirm your password')"
-                                     oninput="setCustomValidity('')"/>
-								</div>
-							</div>
-							<div class="row uniform">
-								<div class="12u">
-									<ul class="actions align-center">
-										<li><input type="submit" value="Register" /></li>
-									</ul>
-								</div>
-							</div>
-						</form>
-					</div>
-				</section>
-
-			<!-- Footer -->
-				<footer id="footer">
-					<ul class="icons">
-						<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
-						<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
-						<li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
-						<li><a href="https://github.com/Piraniks/projektPZ" class="icon fa-github"><span class="label">Github</span></a></li>
-						<li><a href="#" class="icon fa-dribbble"><span class="label">Dribbble</span></a></li>
-						<li><a href="#" class="icon fa-google-plus"><span class="label">Google+</span></a></li>
-					</ul>
-					<ul class="copyright">
-						<li>&copy; Untitled. All rights reserved.</li>
-					</ul>
-				</footer>
-
-		</div>
-
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.dropotron.min.js"></script>
-			<script src="assets/js/jquery.scrollgress.min.js"></script>
-			<script src="assets/js/skel.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
-			<script src="assets/js/main.js"></script>
-</body>
-</html>
+{% endblock %}
