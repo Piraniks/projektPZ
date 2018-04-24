@@ -19,9 +19,9 @@ def password_length_validator(password):
         )
 
 
-def username_length_validator(password):
+def username_length_validator(username):
     MINIMUM_USERNAME_LENGTH = settings.MINIMUM_USERNAME_LENGTH
-    if len(password) < MINIMUM_USERNAME_LENGTH:
+    if len(username) < MINIMUM_USERNAME_LENGTH:
         raise ValidationError(
             f'Username is too short- it must be at '
             f'least {MINIMUM_USERNAME_LENGTH} characters long.'
