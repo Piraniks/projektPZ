@@ -56,5 +56,15 @@ python manage.py runserver
 ```
 
 Sprawi ono, iż pod adresem [http://localhost:8000](http://localhost:8000) będzie dostępny projekt.
+
+
+Jeśli chce się wykorzystać HTTPS należy zamiast tego użyć komendy:
+
+```
+python manage.py runsslserver
+```
+
+Sprawi ono, iż pod adresem [https://localhost:8000](https://localhost:8000) będzie dostępny projekt.
+
 Jeśli wszystko się udało, powinien pojawić się ekran powitalny.
 Dodatkowo w katalogu z projektem powinien pojawić się plik z bazą danych o nazwie `db.sqlite3`.

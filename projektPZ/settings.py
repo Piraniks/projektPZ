@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'sslserver',
+    'custom_auth'
 ]
 
 MIDDLEWARE = [
@@ -133,3 +135,11 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# Custom User
+
+AUTH_USER_MODEL = 'custom_auth.User'
+
+MINIMUM_PASSWORD_LENGTH = 5
+MINIMUM_USERNAME_LENGTH = 5
