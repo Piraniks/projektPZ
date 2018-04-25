@@ -140,3 +140,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Custom User
 
 AUTH_USER_MODEL = 'custom_auth.User'
+
+MINIMUM_PASSWORD_LENGTH = 5
+MINIMUM_USERNAME_LENGTH = 5
