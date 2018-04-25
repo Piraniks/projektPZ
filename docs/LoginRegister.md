@@ -1,4 +1,4 @@
-                                                          # Projekt zaliczeniowy z Programowania Zespołowego - logowanie i rejestracja
+# Projekt zaliczeniowy z Programowania Zespołowego - logowanie i rejestracja
 Jednym z pobocznych celów realizowanych podczas projektu było stworzenie 
 przejrzystego i czytelnego interfejsu użytkownika, umożliwiającego 
 rejestrację - stworzenie konta użytkownika, formularza logowania i 
