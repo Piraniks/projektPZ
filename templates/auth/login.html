@@ -1,11 +1,18 @@
 {% extends '../base.html' %}
+
 {% block button %}
-    <li><a href="{% url 'login' %}" class="button">Log in</a></li>
-    {% endblock %}
+    <li><a href="{% url 'register' %}" class="button navig">Sign up</a></li>
+{% endblock %}
+
+{% block title %}
+    <title>Login</title>
+{% endblock %}
+
 {% block content %}
 
     <header>
         <h2>Login</h2>
+        {{ errors }}
         <hr />
     </header>
 

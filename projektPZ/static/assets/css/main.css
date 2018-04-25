@@ -2626,6 +2626,10 @@
 		white-space: nowrap;
 	}
 
+    .button.navig {
+        width: 5em;
+    }
+
 		input[type="submit"]:hover,
 		input[type="reset"]:hover,
 		input[type="button"]:hover,
