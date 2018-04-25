@@ -40,7 +40,7 @@ class RegisterView(View):
             }
             return render(request, self.TEMPLATE_PATH, context=context)
 
-        return redirect('index')
+        return redirect('login')
 
 
 class LoginView(View):
