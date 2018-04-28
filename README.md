@@ -8,7 +8,6 @@ Przy instalacji najlepiej zaznaczyć opcję z dodaniem do systemowego PATH.
 
 Należy pobrać to repozytorium by móc uruchomić projekt.
 
-<<<<<<< HEAD
 ### (niewymagane) Stworzenie wirtualnego środowiska na potrzeby projektu
 
 Posiadając klon repozytorium należy stworzyć w nim wirtualne środowisko. 
@@ -31,8 +30,6 @@ Bash:
 source venv/Scripts/activate
 ```
 
-=======
->>>>>>> 534685c651a8af737805361d1b200d8d3f9e75b0
 ### Instalacja wymaganych pakietów
 
 Wymagane pakiety znajdują się w pliku `requirements.txt`. 
@@ -68,27 +65,9 @@ Jeśli chce się wykorzystać HTTPS należy zamiast tego użyć komendy:
 python manage.py runsslserver
 ```
 
-Sprawi ono, iż pod adresem [https://localhost:8000](https://localhost:8000) będzie dostępny projekt.
+Sprawi ono, iż pod adresem [https://localhost:8080](https://localhost:8080) będzie dostępny projekt.
 
 Jeśli wszystko się udało, powinien pojawić się ekran powitalny.
 Dodatkowo w katalogu z projektem powinien pojawić się plik z bazą danych o nazwie `db.sqlite3`.
 
-
-#### Stworzenie wirtualnego środowiska na potrzeby projektu
-
-Posiadając klon repozytorium należy stworzyć w nim wirtualne środowisko. 
-By to zrobić należy w konsoli systemowej przejść do katalogu z projektem a następnie
-wpisać następującą komendę:
-
-```bash
-python -m venv venv
-```
-
-Stworzy to w projekcie katalog o nazwie `venv`. Następnie należy aktywować stworzone środowisko.
-
-```
-venv\Scripts\activate
-```
-
-Wirtualne środowisko jest opcjonalne.
 
