@@ -2,112 +2,106 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>BlackFort</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     {% load static %}
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
     <link type="text/css" rel="stylesheet" href="{% static 'assets/css/main.css' %}">
-    <title>BlackFort</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
+
+    <!-- Scripts -->
+    <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.dropotron.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.scrollgress.min.js' %}"></script>
+    <script src="{% static 'assets/js/skel.min.js' %}"></script>
+    <script src="{% static 'assets/js/util.js' %}"></script>
+    <script src="{% static 'assets/js/main.js' %}"></script>
 </head>
 
 <body class="landing">
-		<div id="page-wrapper">
+    <div id="page-wrapper">
 
-			<!-- Header -->
-				<header id="header" class="alt">
-					<h1><a href="{% url 'index' %}">BlackFort &nbsp;  <i class="icon fa-fort-awesome fa-lg"></i></a> </h1>
-					<nav id="nav">
-						<ul>
-                            {% if user.is_authenticated %}
-                                <li>Hi! {{ user.username }}</li>
-                                <li><a href="{% url 'logout' %}" class="button navig">Log out</a></li>
+        <!-- Header -->
+        <header id="header" class="alt">
+            <h1><a href="{% url 'index' %}">BlackFort &nbsp;  <i class="icon fa-fort-awesome fa-lg"></i></a> </h1>
+            <nav id="nav">
+                <ul>
+                    {% if user.is_authenticated %}
+                        <li>Hi! {{ user.username }}</li>
+                        <li><a href="{% url 'logout' %}" class="button navig">Log out</a></li>
+                    {% else %}
+                        <li><a href="{% url 'login' %}" class="button navig">Log in</a></li>
+                    {% endif %}
 
-							{% else %}
-                                <li><a href="{% url 'login' %}" class="button navig">Log in</a></li>
-                            {% endif %}
+                </ul>
+            </nav>
+        </header>
 
+        <!-- Banner -->
+        <section id="banner">
+            <h2>BlackFort</h2>
+            <p>Super project</p>
+        </section>
 
-						</ul>
-					</nav>
-				</header>
+        <!-- Main -->
+        <section id="main" class="container">
 
-			<!-- Banner -->
-				<section id="banner">
-					<h2>BlackFort</h2>
-					<p>Super project</p>
+            <section class="box special">
+                <header class="major">
+                    <h2>Introducing the ultimate mobile app
+                    <br />
+                    for doing stuff with your phone</h2>
+                    <p>Blandit varius ut praesent nascetur eu penatibus nisi risus faucibus nunc ornare<br />
+                    adipiscing nunc adipiscing. Condimentum turpis massa.</p>
+                </header>
+                <span class="image featured"><img src="{% static 'images/pic01.jpg' %}" alt="" /></span>
+            </section>
 
-				</section>
+            <section class="box special features">
+                <div class="features-row">
+                    <section>
+                        <span class="icon major fa-bolt accent2"></span>
+                        <h3>Magna etiam</h3>
+                        <p>Integer volutpat ante et accumsan commophasellus sed aliquam feugiat lorem aliquet ut enim rutrum phasellus iaculis accumsan dolore magna aliquam veroeros.</p>
+                    </section>
+                    <section>
+                        <span class="icon major fa-area-chart accent3"></span>
+                        <h3>Ipsum dolor</h3>
+                        <p>Integer volutpat ante et accumsan commophasellus sed aliquam feugiat lorem aliquet ut enim rutrum phasellus iaculis accumsan dolore magna aliquam veroeros.</p>
+                    </section>
+                </div>
+                <div class="features-row">
+                    <section>
+                        <span class="icon major fa-cloud accent4"></span>
+                        <h3>Sed feugiat</h3>
+                        <p>Integer volutpat ante et accumsan commophasellus sed aliquam feugiat lorem aliquet ut enim rutrum phasellus iaculis accumsan dolore magna aliquam veroeros.</p>
+                    </section>
+                    <section>
+                        <span class="icon major fa-lock accent5"></span>
+                        <h3>Enim phasellus</h3>
+                        <p>Integer volutpat ante et accumsan commophasellus sed aliquam feugiat lorem aliquet ut enim rutrum phasellus iaculis accumsan dolore magna aliquam veroeros.</p>
+                    </section>
+                </div>
+            </section>
 
-			<!-- Main -->
-				<section id="main" class="container">
+        </section>
 
-					<section class="box special">
-						<header class="major">
-							<h2>Introducing the ultimate mobile app
-							<br />
-							for doing stuff with your phone</h2>
-							<p>Blandit varius ut praesent nascetur eu penatibus nisi risus faucibus nunc ornare<br />
-							adipiscing nunc adipiscing. Condimentum turpis massa.</p>
-						</header>
-						<span class="image featured"><img src="{% static 'images/pic01.jpg' %}" alt="" /></span>
-					</section>
+        <!-- CTA -->
+        <section id="cta">
 
-					<section class="box special features">
-						<div class="features-row">
-							<section>
-								<span class="icon major fa-bolt accent2"></span>
-								<h3>Magna etiam</h3>
-								<p>Integer volutpat ante et accumsan commophasellus sed aliquam feugiat lorem aliquet ut enim rutrum phasellus iaculis accumsan dolore magna aliquam veroeros.</p>
-							</section>
-							<section>
-								<span class="icon major fa-area-chart accent3"></span>
-								<h3>Ipsum dolor</h3>
-								<p>Integer volutpat ante et accumsan commophasellus sed aliquam feugiat lorem aliquet ut enim rutrum phasellus iaculis accumsan dolore magna aliquam veroeros.</p>
-							</section>
-						</div>
-						<div class="features-row">
-							<section>
-								<span class="icon major fa-cloud accent4"></span>
-								<h3>Sed feugiat</h3>
-								<p>Integer volutpat ante et accumsan commophasellus sed aliquam feugiat lorem aliquet ut enim rutrum phasellus iaculis accumsan dolore magna aliquam veroeros.</p>
-							</section>
-							<section>
-								<span class="icon major fa-lock accent5"></span>
-								<h3>Enim phasellus</h3>
-								<p>Integer volutpat ante et accumsan commophasellus sed aliquam feugiat lorem aliquet ut enim rutrum phasellus iaculis accumsan dolore magna aliquam veroeros.</p>
-							</section>
-						</div>
-					</section>
+            <h2>Not signed up yet?</h2>
+            <p>Blandit varius ut praesent nascetur eu penatibus nisi risus faucibus nunc.</p>
 
-				</section>
+            <form>
+                <a href="{% url 'register' %}" class="button">Sign up</a>
+            </form>
 
-			<!-- CTA -->
-				<section id="cta">
+        </section>
 
-					<h2>Not signed up yet?</h2>
-					<p>Blandit varius ut praesent nascetur eu penatibus nisi risus faucibus nunc.</p>
+    <!-- Footer -->
+    {% include "footer.html" %}
 
-					<form>
-                        <a href="{% url 'register' %}" class="button">Sign up</a>
-					</form>
+    </div>
 
-				</section>
-
-			<!-- Footer -->
-				{% include "footer.html" %}
-
-		</div>
-
-		<!-- Scripts -->
-		<script src="{% static 'assets/js/jquery.min.js' %}"></script>
-			<script src="{% static 'assets/js/jquery.dropotron.min.js' %}"></script>
-			<script src="{% static 'assets/js/jquery.scrollgress.min.js' %}"></script>
-			<script src="{% static 'assets/js/skel.min.js' %}"></script>
-			<script src="{% static 'assets/js/util.js' %}"></script>
-			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
-			<script src="{% static 'assets/js/main.js' %}"></script>
-
-	</body>
-
+</body>
 </html>
