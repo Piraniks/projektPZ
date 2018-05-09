@@ -1,4 +1,4 @@
-{% extends '../base.html' %}
+{% extends 'base.html' %}
 
 {% block button %}
     <li><a href="{% url 'login' %}" class="button navig">Log in</a></li>
@@ -20,24 +20,24 @@
          {% csrf_token %}
             <div class="row uniform 50%">
                 <div class="12u">
-                    <input type="text" name="username" id="username" placeholder="Username" required="required" autofocus
-                           required title="Enter your username" oninvalid="this.setCustomValidity('This field should not be left blank')"
-                     oninput="setCustomValidity('')"/>
+                    <input type="text" name="username" id="username" placeholder="Username" required autofocus
+                           title="Enter your username" oninvalid="this.setCustomValidity('This field should not be left blank')"
+                           oninput="setCustomValidity('')"/>
 
                 </div>
             </div>
             <div class="row uniform 50%">
                 <div class="12u">
-                    <input type="password" name="password" id="password" placeholder="Password"
-                    required title="Enter your password" oninvalid="this.setCustomValidity('This field should not be left blank')"
-                     oninput="setCustomValidity('')"/>
+                    <input type="password" name="password" id="password" placeholder="Password" required
+                           title="Enter your password" oninvalid="this.setCustomValidity('This field should not be left blank')"
+                           oninput="setCustomValidity('')"/>
                 </div>
             </div>
             <div class="row uniform 50%">
                 <div class="12u">
                     <input type="password" name="password_confirm" id="password_confirm" placeholder="Confirm Password"
-                    required title="Confirm your password" oninvalid="this.setCustomValidity('Please, confirm your password')"
-                     oninput="setCustomValidity('')"/>
+                           required title="Confirm your password" oninvalid="this.setCustomValidity('Please, confirm your password')"
+                           oninput="setCustomValidity('')"/>
                 </div>
             </div>
             <div class="row uniform">
