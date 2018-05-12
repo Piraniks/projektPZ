@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'sslserver',
-    'custom_auth'
+    'custom_auth',
+    'device'
 ]
 
 MIDDLEWARE = [
@@ -140,3 +141,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Custom User
 
 AUTH_USER_MODEL = 'custom_auth.User'
+
+
+# Redirection
+
+LOGIN_URL = '/login/'
