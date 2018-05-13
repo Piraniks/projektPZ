@@ -14,7 +14,7 @@ class DeviceView(LoginRequiredMixin, View):
 
     def get(self, request, device_uuid):
         try:
-            device = Device.objects.get(uuid=device_uuid)
+            device = Device.objects.get(uuid=device_uuid, is_active=True)
             if request.user == device.owner:
                 return render(request, self.TEMPLATE, context={'device': device})
             else:
@@ -24,14 +24,17 @@ class DeviceView(LoginRequiredMixin, View):
 
     def post(self, request, device_uuid):
         try:
-            device = Device.objects.get(uuid=device_uuid)
+            device = Device.objects.get(uuid=device_uuid, is_active=True)
 
             if request.user != device.owner:
                 return render(request, TEMPLATE_403, status=status.HTTP_403_FORBIDDEN)
 
-            device_form = DeviceForm(data=request.PUT)
+            device_form = DeviceForm(request.POST)
 
             if device_form.is_valid():
+                device.name = device_form.cleaned_data.get('name')
+                device.save()
+
                 return render(request, self.TEMPLATE, context={'device': device})
             else:
                 context = {
@@ -48,7 +51,7 @@ class DeviceViewList(LoginRequiredMixin, View):
     TEMPLATE = 'device/device_list.html'
 
     def get(self, request):
-        devices = Device.objects.filter(owner=request.user)
+        devices = Device.objects.filter(owner=request.user, is_active=True)
         return render(request, self.TEMPLATE, context={'devices': devices})
 
 
@@ -59,16 +62,17 @@ class DeviceCreateView(LoginRequiredMixin, View):
         return render(request, self.TEMPLATE)
 
     def post(self, request):
-        device_form = DeviceForm(data=request.PUT)
+        device_form = DeviceForm(data=request.POST)
 
         if device_form.is_valid():
             new_device = device_form.save(commit=False)
 
             new_device.last_updated = timezone.now()
             new_device.owner = request.user
+            new_device.is_active = True
 
             new_device.save()
 
-            return redirect('device', kwargs={'device_uuid': new_device.uuid})
+            return redirect('device', device_uuid=str(new_device.uuid))
         else:
-            return redirect('device')
+            return redirect('device_list')

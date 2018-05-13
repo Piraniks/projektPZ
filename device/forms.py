@@ -4,12 +4,12 @@ from device.models import Device
 
 
 class DeviceForm(forms.ModelForm):
-    uuid = forms.UUIDField(disabled=True)
-    last_updated = forms.DateTimeField(disabled=True)
+    uuid = forms.UUIDField(disabled=True, required=False)
+    last_updated = forms.DateTimeField(disabled=True, required=False)
 
-    latest_version = forms.IntegerField(disabled=True, min_value=0)
-    owner = forms.IntegerField(disabled=True, min_value=0)
+    version = forms.IntegerField(disabled=True, min_value=0, required=False)
+    owner = forms.IntegerField(disabled=True, min_value=0, required=False)
 
     class Meta:
         model = Device
-        fields = '__all__'
+        exclude = ['id']
