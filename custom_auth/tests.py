@@ -6,8 +6,6 @@ from custom_auth.models import User
 
 
 class RegisterUserTestCase(TransactionTestCase):
-    def setUp(self):
-        client = Client()
 
     def test_register_page_exists(self):
         response = self.client.get('/register/')
