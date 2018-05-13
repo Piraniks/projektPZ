@@ -55,10 +55,12 @@ class Device(models.Model):
     name = models.CharField(max_length=50)
     is_standalone = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    last_edited = models.DateTimeField(auto_now=True)
 
     last_updated = models.DateTimeField(null=True, blank=True)
     version = models.ForeignKey(Version, on_delete=models.SET_NULL, related_name='devices',
-                                       null=True, blank=True)
+                                null=True, blank=True)
 
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='devices', null=True)
 

@@ -67,12 +67,14 @@ class DeviceCreateView(LoginRequiredMixin, View):
         if device_form.is_valid():
             new_device = device_form.save(commit=False)
 
-            new_device.last_updated = timezone.now()
             new_device.owner = request.user
             new_device.is_active = True
 
             new_device.save()
 
-            return redirect('device', device_uuid=str(new_device.uuid))
-        else:
             return redirect('device_list')
+        else:
+            context = {
+                'errors': device_form.errors.as_json()
+            }
+            return render(request, self.TEMPLATE, context=context)

@@ -10,6 +10,8 @@
     {% csrf_token %}
     {{ device.uuid }}<br>
     <input type="text" value="{{ device.name }}" title="name" id="name" name="name"><br>
+    {{ device.timestamp | date:'Y-m-d H:i:s' }}<br>
+    {{ device.last_edited | date:'Y-m-d H:i:s' }}<br>
     {{ device.last_updated | date:'Y-m-d H:i:s' }}<br>
 </form>
 
