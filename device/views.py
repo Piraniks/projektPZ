@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
-from django.utils import timezone
 from rest_framework import status
 
 from projektPZ import TEMPLATE_404, TEMPLATE_403
