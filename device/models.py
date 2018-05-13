@@ -54,9 +54,10 @@ class Device(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, unique=True)
     name = models.CharField(max_length=50)
     is_standalone = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
 
     last_updated = models.DateTimeField(null=True, blank=True)
-    latest_version = models.ForeignKey(Version, on_delete=models.SET_NULL, related_name='devices',
+    version = models.ForeignKey(Version, on_delete=models.SET_NULL, related_name='devices',
                                        null=True, blank=True)
 
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='devices', null=True)
@@ -70,7 +71,7 @@ class Device(models.Model):
 
     @property
     def is_up_to_date(self):
-        version = self.latest_version
+        version = self.version
         if version is None:
             return True
 
@@ -80,7 +81,10 @@ class Device(models.Model):
         return False
 
     def raise_version(self):
-        current_version = self.latest_version
+        if self.is_up_to_date:
+            return False
+
+        current_version = self.version
         if current_version is None:
             raise Exception('Version for the device is not specified.')
 
@@ -91,9 +95,11 @@ class Device(models.Model):
                 'is not considered latest while there is no next version.'
             )
 
-        self.latest_version = next_version
+        self.version = next_version
         self.last_updated = timezone.now()
         self.save()
+
+        return True
 
     def update(self):
         while self.is_up_to_date is False:

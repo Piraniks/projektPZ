@@ -6,12 +6,11 @@
 </head>
 <body>
 
-<form>
-
+<form method="post">
+    {% csrf_token %}
     {{ device.uuid }}<br>
-    {{ device.id }}<br>
-    {{ device.name }}<br>
-    {{ device.version }}<br>
+    <input type="text" value="{{ device.name }}" title="name" id="name" name="name"><br>
+    {{ device.last_updated | date:'Y-m-d H:i:s' }}<br>
 </form>
 
 </body>

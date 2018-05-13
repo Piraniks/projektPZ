@@ -5,6 +5,9 @@
     <title>Title</title>
 </head>
 <body>
-
+    {% for device in devices %}
+        <a href="{% url 'device' device_uuid=device.uuid %}">{{ device.name }}</a><br>
+        {{ device.uuid }}<br><br>
+    {% endfor %}
 </body>
 </html>
