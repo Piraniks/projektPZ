@@ -32,7 +32,7 @@ class DeviceView(LoginRequiredMixin, View):
 
             if device_form.is_valid():
                 device.name = device_form.cleaned_data.get('name', device.name)
-                device.is_active = device_form.cleaned_data.get('is_active', True)
+                device.is_active = device_form.cleaned_data.get('is_active', device.is_active)
                 device.save()
 
                 return render(request, self.TEMPLATE, context={'device': device})
@@ -41,7 +41,7 @@ class DeviceView(LoginRequiredMixin, View):
                     'device': device,
                     'errors': device_form.errors.as_json()
                 }
-                return render(request, self.TEMPLATE, context=context)
+                return render(request, self.TEMPLATE, context=context, status=status.HTTP_400_BAD_REQUEST)
 
         except Device.DoesNotExist:
             return render(request, TEMPLATE_404, status=status.HTTP_404_NOT_FOUND)
@@ -77,4 +77,4 @@ class DeviceCreateView(LoginRequiredMixin, View):
             context = {
                 'errors': device_form.errors.as_json()
             }
-            return render(request, self.TEMPLATE, context=context)
+            return render(request, self.TEMPLATE, context=context, status=status.HTTP_400_BAD_REQUEST)
