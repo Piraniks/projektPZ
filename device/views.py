@@ -31,7 +31,8 @@ class DeviceView(LoginRequiredMixin, View):
             device_form = DeviceForm(request.POST)
 
             if device_form.is_valid():
-                device.name = device_form.cleaned_data.get('name')
+                device.name = device_form.cleaned_data.get('name', device.name)
+                device.is_active = device_form.cleaned_data.get('is_active', True)
                 device.save()
 
                 return render(request, self.TEMPLATE, context={'device': device})
@@ -46,7 +47,7 @@ class DeviceView(LoginRequiredMixin, View):
             return render(request, TEMPLATE_404, status=status.HTTP_404_NOT_FOUND)
 
 
-class DeviceViewList(LoginRequiredMixin, View):
+class DeviceListView(LoginRequiredMixin, View):
     TEMPLATE = 'device/device_list.html'
 
     def get(self, request):

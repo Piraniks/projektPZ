@@ -1,4 +1,4 @@
-from django.test import TestCase, Client, TransactionTestCase
+from django.test import TestCase, TransactionTestCase
 from django.shortcuts import reverse
 from rest_framework import status
 
@@ -127,9 +127,6 @@ class RegisterUserTestCase(TransactionTestCase):
 
 
 class LoginUserTestCase(TestCase):
-    def setUp(self):
-        client = Client()
-
     def test_login_page_exists(self):
         response = self.client.get('/login/')
 
@@ -221,10 +218,6 @@ class LoginUserTestCase(TestCase):
 
 
 class LogoutUserTestCase(TestCase):
-
-    def setUp(self):
-        client = Client()
-
     def test_logout_page_redirects_to_main_page(self):
         response = self.client.get('/logout/')
 
