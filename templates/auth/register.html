@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block button %}
+    <li><a href="{% url 'login' %}" class="button navig">Log in</a></li>
+{% endblock %}
+
+{% block title %}
+    <title>Register</title>
+{% endblock %}
+
+{% block content %}
+
+    <header>
+        <h2>Register</h2>
+        <hr />
+    </header>
+
+    <div class="box">
+         <form method="post" action="{% url 'register' %}">
+         {% csrf_token %}
+            <div class="row uniform 50%">
+                <div class="12u">
+                    <input type="text" name="username" id="username" placeholder="Username" required autofocus
+                           title="Enter your username" oninvalid="this.setCustomValidity('This field should not be left blank')"
+                           oninput="setCustomValidity('')"/>
+
+                </div>
+            </div>
+            <div class="row uniform 50%">
+                <div class="12u">
+                    <input type="password" name="password" id="password" placeholder="Password" required
+                           title="Enter your password" oninvalid="this.setCustomValidity('This field should not be left blank')"
+                           oninput="setCustomValidity('')"/>
+                </div>
+            </div>
+            <div class="row uniform 50%">
+                <div class="12u">
+                    <input type="password" name="password_confirm" id="password_confirm" placeholder="Confirm Password"
+                           required title="Confirm your password" oninvalid="this.setCustomValidity('Please, confirm your password')"
+                           oninput="setCustomValidity('')"/>
+                </div>
+            </div>
+            <div class="row uniform">
+                <div class="12u">
+                    <ul class="actions align-center">
+                        <li><input type="submit" value="Register" /></li>
+                    </ul>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}
