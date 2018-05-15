@@ -1,14 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <form method="post" action="{% url 'device_create' %}">
+{% extends 'base.html' %}
+{% block content %}
+     <header>
+        <h2>Create new device</h2>
+        <hr />
+    </header>
+
+    <form method="post" action="{% url 'device_create' %}" >
         {% csrf_token %}
-        <input type="text" id="name" name="name" title="name">
+        <center>
+            <input type="text" id="name" name="name" title="name" placeholder="Device name" required autofocus
+                   oninvalid="this.setCustomValidity('This field should not be left blank')"
+                   oninput="setCustomValidity('')" style="width:70%">
+        </center><br>
+        <div class="row uniform">
+            <div class="12u">
+                <ul class="actions align-center">
+                    <li><input class="button" type="submit" value="Create" /></li>
+                </ul>
+            </div>
+        </div>
     </form>
-    {{ errors }}
-</body>
-</html>
+{% endblock %}
