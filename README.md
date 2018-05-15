@@ -71,3 +71,10 @@ Jeśli wszystko się udało, powinien pojawić się ekran powitalny.
 Dodatkowo w katalogu z projektem powinien pojawić się plik z bazą danych o nazwie `db.sqlite3`.
 
 
+##Import przykładowych danych
+
+Aby zaimportować do bazy danych przygotowane przykładowe dane, należy posłużyć się komendą:
+
+```
+python manage.py loaddata data.json
+```
