@@ -87,16 +87,20 @@
         </section>
 
         <!-- CTA -->
-        <section id="cta">
+        {% if user.is_authenticated %}
 
-            <h2>Not signed up yet?</h2>
-            <p>Blandit varius ut praesent nascetur eu penatibus nisi risus faucibus nunc.</p>
+        {% else %}
+            <section id="cta">
 
-            <form>
-                <a href="{% url 'register' %}" class="button">Sign up</a>
-            </form>
+                <h2>Not signed up yet?</h2>
+                <p>Blandit varius ut praesent nascetur eu penatibus nisi risus faucibus nunc.</p>
 
-        </section>
+                <form>
+                    <a href="{% url 'register' %}" class="button">Sign up</a>
+                </form>
+
+            </section>
+        {% endif %}
 
     <!-- Footer -->
     {% include "footer.html" %}

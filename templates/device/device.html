@@ -1,20 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ device.uuid }}<br>
-    <input type="text" value="{{ device.name }}" title="name" id="name" name="name"><br>
-    <input type="checkbox" {% if device.is_standalone %}checked{% endif %} title="is_standalone" id="is_standalone" name="is_standalone"><br>
-    {{ device.timestamp | date:'Y-m-d H:i:s' }}<br>
-    {{ device.last_edited | date:'Y-m-d H:i:s' }}<br>
-    {{ device.last_updated | date:'Y-m-d H:i:s' }}<br>
-</form>
+{% block title %}
+    <title>Device details</title>
+{% endblock %}
 
-</body>
-</html>
+{% block content %}
+
+    <header>
+        <h2>Device details</h2>
+        <hr />
+    </header>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ device.uuid }}<br></br>
+        <center><div style="width: 70%">
+            <input type="text" value="{{ device.name }}" title="name" id="name" name="name"><br>
+        <div></center>
+        <center><div class="6u 12u(narrower)">
+            <input type="checkbox" {% if device.is_standalone %} checked{% endif %} title="is_standalone" id="is_standalone" name="is_standalone">
+            <label for="is_standalone">Standalone</label>
+        </div></center>
+        <b> Creation date: </b> {{ device.timestamp | date:'Y-m-d H:i:s' }}<br>
+        <b> Modification date: </b> {{ device.last_edited | date:'Y-m-d H:i:s' }}<br>
+        {# {{ device.last_updated | date:'Y-m-d H:i:s' }}<br> #}
+    </form>
+
+{% endblock %}
