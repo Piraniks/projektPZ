@@ -1,1 +1,28 @@
-not found
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    {% block title %}{% endblock %}
+    {% load static %}
+
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
+    <link type="text/css" rel="stylesheet" href="{% static 'assets/css/main.css' %}">
+
+    <!-- Scripts -->
+    <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.dropotron.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.scrollgress.min.js' %}"></script>
+    <script src="{% static 'assets/js/skel.min.js' %}"></script>
+    <script src="{% static 'assets/js/util.js' %}"></script>
+    <script src="{% static 'assets/js/main.js' %}"></script>
+
+</head>
+<body>
+<div id="page-wrapper">
+<center>
+     <img src="{% static 'images/404-Page-Featured-Image.png' %}" alt="" style="width:70%" />
+</center>
+</div>
+</body>
+</html>
