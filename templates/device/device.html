@@ -10,6 +10,7 @@
     {% csrf_token %}
     {{ device.uuid }}<br>
     <input type="text" value="{{ device.name }}" title="name" id="name" name="name"><br>
+    <input type="checkbox" {% if device.is_standalone %}checked{% endif %} title="is_standalone" id="is_standalone" name="is_standalone"><br>
     {{ device.timestamp | date:'Y-m-d H:i:s' }}<br>
     {{ device.last_edited | date:'Y-m-d H:i:s' }}<br>
     {{ device.last_updated | date:'Y-m-d H:i:s' }}<br>

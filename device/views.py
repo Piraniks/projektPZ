@@ -32,7 +32,8 @@ class DeviceView(LoginRequiredMixin, View):
 
             if device_form.is_valid():
                 device.name = device_form.cleaned_data.get('name', device.name)
-                device.is_active = device_form.cleaned_data.get('is_active', device.is_active)
+                device.is_standalone = device_form.cleaned_data.get(
+                    'is_standalone', device.is_standalone)
                 device.save()
 
                 return render(request, self.TEMPLATE, context={'device': device})
