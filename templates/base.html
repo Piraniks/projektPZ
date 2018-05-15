@@ -16,6 +16,7 @@
     <script src="{% static 'assets/js/skel.min.js' %}"></script>
     <script src="{% static 'assets/js/util.js' %}"></script>
     <script src="{% static 'assets/js/main.js' %}"></script>
+
 </head>
 <body>
 
@@ -40,11 +41,23 @@
 
         <!-- Main -->
         <section id="main" class="container 50%">
+        <div style="text-align: center; margin-top:20px;">
 
                 {% block content %}
                 {% endblock %}
+        <div style="color:red">
+             {% for field, errors in errors.items %}
+                 {% for error in errors %}
+                     {{ error.message }}
+                     </br>
+                 {% endfor %}
+             {% endfor %}
+        </div>
+        </div>
+
 
         </section>
+
 
         {% include "footer.html" %}
     </div>
