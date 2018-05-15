@@ -79,7 +79,7 @@ class LoginView(View):
             return render(request, self.TEMPLATE_PATH, context=context)
 
         login(request, user)
-        return redirect('index')
+        return redirect('device_list')
 
 
 def logout_user(request):
