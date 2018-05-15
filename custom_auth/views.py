@@ -1,3 +1,5 @@
+import json
+
 from django.views.generic import View
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -20,7 +22,7 @@ class RegisterView(View):
 
         if not form.is_valid():
             context = {
-                "errors": form.errors.as_json()
+                "errors": json.loads(form.errors.as_json())
             }
             return render(request, self.TEMPLATE_PATH, context=context)
 
@@ -56,7 +58,7 @@ class LoginView(View):
 
         if not form.is_valid():
             context = {
-                "errors": form.errors.as_json()
+                "errors": json.loads(form.errors.as_json())
             }
             return render(request, self.TEMPLATE_PATH, context=context)
 
