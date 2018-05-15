@@ -39,7 +39,7 @@ class RegisterUserTestCase(TransactionTestCase):
         user = User.objects.filter(username=username).first()
 
         self.assertIsNotNone(user)
-        self.assertRedirects(response, reverse('index'))
+        self.assertRedirects(response, reverse('login'))
 
     def test_create_with_empty_passwords(self):
         username = 'username'
