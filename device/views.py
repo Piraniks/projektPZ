@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
-from django.utils import timezone
 from rest_framework import status
 
 from projektPZ import TEMPLATE_404, TEMPLATE_403
@@ -32,7 +31,9 @@ class DeviceView(LoginRequiredMixin, View):
             device_form = DeviceForm(request.POST)
 
             if device_form.is_valid():
-                device.name = device_form.cleaned_data.get('name')
+                device.name = device_form.cleaned_data.get('name', device.name)
+                device.is_standalone = device_form.cleaned_data.get(
+                    'is_standalone', device.is_standalone)
                 device.save()
 
                 return render(request, self.TEMPLATE, context={'device': device})
@@ -41,13 +42,13 @@ class DeviceView(LoginRequiredMixin, View):
                     'device': device,
                     'errors': device_form.errors.as_json()
                 }
-                return render(request, self.TEMPLATE, context=context)
+                return render(request, self.TEMPLATE, context=context, status=status.HTTP_400_BAD_REQUEST)
 
         except Device.DoesNotExist:
             return render(request, TEMPLATE_404, status=status.HTTP_404_NOT_FOUND)
 
 
-class DeviceViewList(LoginRequiredMixin, View):
+class DeviceListView(LoginRequiredMixin, View):
     TEMPLATE = 'device/device_list.html'
 
     def get(self, request):
@@ -67,12 +68,14 @@ class DeviceCreateView(LoginRequiredMixin, View):
         if device_form.is_valid():
             new_device = device_form.save(commit=False)
 
-            new_device.last_updated = timezone.now()
             new_device.owner = request.user
             new_device.is_active = True
 
             new_device.save()
 
-            return redirect('device', device_uuid=str(new_device.uuid))
-        else:
             return redirect('device_list')
+        else:
+            context = {
+                'errors': device_form.errors.as_json()
+            }
+            return render(request, self.TEMPLATE, context=context, status=status.HTTP_400_BAD_REQUEST)
