@@ -1,8 +1,9 @@
-# Projekt zaliczeniowy z Programowania Zespołowego
+# Projekt zaliczeniowy z Programowania Zespołowego - instalacja
 
 Projekt zakłada, że użytkownik posiada zainstalowany język [Python 3.6](https://www.python.org/ftp/python/3.6.5/python-3.6.5-amd64.exe)
 Przy instalacji najlepiej zaznaczyć opcję z dodaniem do systemowego PATH.
 
+## Przygotowanie do wdrożenia projektu
 ### Pobranie repozytorium w projektem
 
 Należy pobrać to repozytorium by móc uruchomić projekt.
@@ -64,7 +65,9 @@ Jeśli chce się wykorzystać HTTPS należy zamiast tego użyć komendy:
 python manage.py runsslserver
 ```
 
-Sprawi ono, iż pod adresem [https://localhost:8000](https://localhost:8000) będzie dostępny projekt.
+Sprawi ono, iż pod adresem [https://localhost:8080](https://localhost:8080) będzie dostępny projekt.
 
 Jeśli wszystko się udało, powinien pojawić się ekran powitalny.
 Dodatkowo w katalogu z projektem powinien pojawić się plik z bazą danych o nazwie `db.sqlite3`.
+
+

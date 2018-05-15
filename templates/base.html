@@ -2,55 +2,52 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    {% block title %}
-    {% endblock %}
-     {% load static %}
+
+    {% block title %}{% endblock %}
+    {% load static %}
 
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
     <link type="text/css" rel="stylesheet" href="{% static 'assets/css/main.css' %}">
+
+    <!-- Scripts -->
+    <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.dropotron.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.scrollgress.min.js' %}"></script>
+    <script src="{% static 'assets/js/skel.min.js' %}"></script>
+    <script src="{% static 'assets/js/util.js' %}"></script>
+    <script src="{% static 'assets/js/main.js' %}"></script>
 </head>
 <body>
 
+    <div id="page-wrapper">
+        <!-- Header -->
+        <header id="header">
+            <h1><a href="{% url 'index' %}">BlackFort &nbsp;  <i class="icon fa-fort-awesome fa-lg"></i></a> </h1>
+            <nav id="nav">
+                <ul>
+                    {% if user.is_authenticated %}
+                        <li>Hi! {{ user.username }}</li>
+                        <li><a href="{% url 'logout' %}" class="button">Log out</a></li>
 
-<div id="page-wrapper">
-
-			<!-- Header -->
-				<header id="header">
-					<h1><a href="{% url 'index' %}">BlackFort &nbsp;  <i class="icon fa-fort-awesome fa-lg"></i></a> </h1>
-					<nav id="nav">
-						<ul>
-							{% if user.is_authenticated %}
-                                <li>Hi! {{ user.username }}</li>
-                                <li><a href="{% url 'logout' %}" class="button">Log out</a></li>
-
-							{% else %}
-                                {% block button %}
-                                {% endblock %}
-
-                            {% endif %}
-						</ul>
-					</nav>
-				</header>
-
-			<!-- Main -->
-				<section id="main" class="container 50%">
-
-                        {% block content %}
+                    {% else %}
+                        {% block button %}
                         {% endblock %}
 
-				</section>
+                    {% endif %}
+                </ul>
+            </nav>
+        </header>
 
-    {% include "footer.html" %}
+        <!-- Main -->
+        <section id="main" class="container 50%">
 
-		</div>
+                {% block content %}
+                {% endblock %}
 
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.dropotron.min.js"></script>
-			<script src="assets/js/jquery.scrollgress.min.js"></script>
-			<script src="assets/js/skel.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
-			<script src="assets/js/main.js"></script>
+        </section>
+
+        {% include "footer.html" %}
+    </div>
+
 </body>
 </html>

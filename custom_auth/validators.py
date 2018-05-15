@@ -1,6 +1,7 @@
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
-from django.conf import settings
+
+from custom_auth import settings
 
 
 username_regex_validator = RegexValidator(
@@ -20,9 +21,9 @@ def password_length_validator(password):
 
 
 def username_length_validator(username):
-    MINIMUM_USERNAME_LENGTH = settings.MINIMUM_USERNAME_LENGTH
-    if len(username) < MINIMUM_USERNAME_LENGTH:
+    minimum_username_length = settings.MINIMUM_USERNAME_LENGTH
+    if len(username) < minimum_username_length:
         raise ValidationError(
             f'Username is too short- it must be at '
-            f'least {MINIMUM_USERNAME_LENGTH} characters long.'
+            f'least {minimum_username_length} characters long.'
         )
