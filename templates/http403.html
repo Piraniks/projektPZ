@@ -1,29 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+{% extends 'base.html' %}
+{% load static %}
 
-    {% block title %}{% endblock %}
-    {% load static %}
+{% block title %}
+    <title>403 Access denied</title>
+{% endblock %}
 
-    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
-    <link type="text/css" rel="stylesheet" href="{% static 'assets/css/main.css' %}">
+{% block content %}
 
-    <!-- Scripts -->
-    <script src="{% static 'assets/js/jquery.min.js' %}"></script>
-    <script src="{% static 'assets/js/jquery.dropotron.min.js' %}"></script>
-    <script src="{% static 'assets/js/jquery.scrollgress.min.js' %}"></script>
-    <script src="{% static 'assets/js/skel.min.js' %}"></script>
-    <script src="{% static 'assets/js/util.js' %}"></script>
-    <script src="{% static 'assets/js/main.js' %}"></script>
+    <a href="{% url 'device_list' %}" style="color: #666; position: absolute; left: 1em; top: 4em; border:0;"><i class="icon fa-angle-left fa-2x"></i></a>
 
-</head>
-<body>
-<div id="page-wrapper" >
-<center>
-     <img src="{% static 'images/403.png' %}" alt="" style="width:70%; margin-top: 7%" />
-</center>
-    
-</div>
-</body>
-</html>
+    <center>
+         <img src="{% static 'images/403.png' %}" alt="" style="width:70%; margin-top: 7%; margin-bottom: 7%;" />
+    </center>
+
+{% endblock %}

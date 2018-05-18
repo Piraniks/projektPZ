@@ -16,8 +16,10 @@
     <script src="{% static 'assets/js/skel.min.js' %}"></script>
     <script src="{% static 'assets/js/util.js' %}"></script>
     <script src="{% static 'assets/js/main.js' %}"></script>
+    <script src="{% static 'assets/js/goback.js' %}"></script>
 
 </head>
+
 <body>
 
     <div id="page-wrapper">
@@ -28,6 +30,7 @@
                 <ul>
                     {% if user.is_authenticated %}
                         <li>Hi! {{ user.username }}</li>
+                        <li><a href="{% url 'device_list' %}">Your devices</a></li>
                         <li><a href="{% url 'logout' %}" class="button">Log out</a></li>
 
                     {% else %}
@@ -40,11 +43,12 @@
         </header>
 
         <!-- Main -->
-        <section id="main" class="container 50%" style="min-height: 30em;">
+
         <div style="text-align: center; margin-top:20px;">
 
-                {% block content %}
-                {% endblock %}
+            {% block content %}
+            {% endblock %}
+
         <div style="color:red">
              {% for field, errors in errors.items %}
                  {% for error in errors %}
@@ -54,10 +58,6 @@
              {% endfor %}
         </div>
         </div>
-
-
-        </section>
-
 
         {% include "footer.html" %}
     </div>

@@ -1,23 +1,39 @@
 {% extends 'base.html' %}
-{% block content %}
-     <header>
-        <h2>Create new device</h2>
-        <hr />
-    </header>
 
-    <form method="post" action="{% url 'device_create' %}" >
-        {% csrf_token %}
-        <center>
-            <input type="text" id="name" name="name" title="name" placeholder="Device name" required autofocus
-                   oninvalid="this.setCustomValidity('This field should not be left blank')"
-                   oninput="setCustomValidity('')" style="width:70%">
-        </center><br>
-        <div class="row uniform">
-            <div class="12u">
-                <ul class="actions align-center">
-                    <li><input class="button" type="submit" value="Create" /></li>
-                </ul>
+{% block title %}
+    <title>Add new devices</title>
+{% endblock %}
+
+{% block content %}
+
+    <section id="main" class="container 50%" style="min-height: 30em;">
+
+        <header>
+            <h2>Add new device</h2>
+            <hr />
+        </header>
+
+        <a onclick="goBack()" style="color: #666; position: fixed; left: 1em; top: 4em; border:0;"><i class="icon fa-angle-left fa-2x"></i></a>
+
+        <form method="post" action="{% url 'device_create' %}" >
+            {% csrf_token %}
+            <center>
+                <input type="text" id="name" name="name" title="name" placeholder="Device name" required autofocus
+                       oninvalid="this.setCustomValidity('This field should not be left blank')"
+                       oninput="setCustomValidity('')" style="width: 55%">
+            </center><br>
+
+            <div class="row uniform">
+                <div class="12u">
+                    <ul class="actions align-center">
+                        <ul class="actions">
+                            <li><button type="submit" class="button icon fa-plus" style="font-size: 0.95em;">Add</button></li>
+                        </ul>
+                    </ul>
+                </div>
             </div>
-        </div>
-    </form>
+        </form>
+
+    </section>
+
 {% endblock %}
