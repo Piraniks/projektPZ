@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    <title>404 Page not found</title>
+{% endblock %}
+
+{% block content %}
+
+    <a href="{% url 'device_list' %}" style="color: #666; position: absolute; left: 1em; top: 4em; border:0;"><i class="icon fa-angle-left fa-2x"></i></a>
+
+    <center>
+         <img src="{% static 'images/404-Page-Featured-Image.png' %}" alt="" style="width:70%" />
+    </center>
+
+{% endblock %}

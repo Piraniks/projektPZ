@@ -10,44 +10,49 @@
 
 {% block content %}
 
-    <header>
-        <h2>Register</h2>
-        <hr />
-    </header>
+    <section id="main" class="container 50%" style="min-height: 30em;">
 
-    <div class="box">
-         <form method="post" action="{% url 'register' %}">
-         {% csrf_token %}
-            <div class="row uniform 50%">
-                <div class="12u">
-                    <input type="text" name="username" id="username" placeholder="Username" required autofocus
-                           title="Enter your username" oninvalid="this.setCustomValidity('This field should not be left blank')"
-                           oninput="setCustomValidity('')"/>
+        <header>
+            <h2>Register</h2>
+            <hr />
+        </header>
 
+        <div class="box">
+             <form method="post" action="{% url 'register' %}">
+             {% csrf_token %}
+                <div class="row uniform 50%">
+                    <div class="12u">
+                        <input type="text" name="username" id="username" placeholder="Username" required autofocus
+                               title="Enter your username" oninvalid="this.setCustomValidity('This field should not be left blank')"
+                               oninput="setCustomValidity('')"/>
+
+                    </div>
                 </div>
-            </div>
-            <div class="row uniform 50%">
-                <div class="12u">
-                    <input type="password" name="password" id="password" placeholder="Password" required
-                           title="Enter your password" oninvalid="this.setCustomValidity('This field should not be left blank')"
-                           oninput="setCustomValidity('')"/>
+                <div class="row uniform 50%">
+                    <div class="12u">
+                        <input type="password" name="password" id="password" placeholder="Password" required
+                               title="Enter your password" oninvalid="this.setCustomValidity('This field should not be left blank')"
+                               oninput="setCustomValidity('')"/>
+                    </div>
                 </div>
-            </div>
-            <div class="row uniform 50%">
-                <div class="12u">
-                    <input type="password" name="password_confirm" id="password_confirm" placeholder="Confirm Password"
-                           required title="Confirm your password" oninvalid="this.setCustomValidity('Please, confirm your password')"
-                           oninput="setCustomValidity('')"/>
+                <div class="row uniform 50%">
+                    <div class="12u">
+                        <input type="password" name="password_confirm" id="password_confirm" placeholder="Confirm Password"
+                               required title="Confirm your password" oninvalid="this.setCustomValidity('Please, confirm your password')"
+                               oninput="setCustomValidity('')"/>
+                    </div>
                 </div>
-            </div>
-            <div class="row uniform">
-                <div class="12u">
-                    <ul class="actions align-center">
-                        <li><input type="submit" value="Register" /></li>
-                    </ul>
+                <div class="row uniform">
+                    <div class="12u">
+                        <ul class="actions align-center">
+                            <li><input type="submit" value="Register" /></li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </form>
-    </div>
+
+            </form>
+        </div>
+
+    </section>
 
 {% endblock %}

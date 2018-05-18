@@ -48,6 +48,14 @@ W tym celu należy w konsoli systemowej przejść do katalogu z projektem i wpis
 python manage.py migrate
 ```
 
+### Import przykładowych danych
+
+Aby zaimportować do bazy danych przygotowane przykładowe dane, należy posłużyć się komendą:
+
+```
+python manage.py loaddata data.json
+```
+
 ### Włączenie projektu
 
 By włączyć projekt należy będąc w katalogu z projektem w konsoli systemowej wpisać:

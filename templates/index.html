@@ -23,11 +23,13 @@
 
         <!-- Header -->
         <header id="header" class="alt">
-            <h1><a href="{% url 'index' %}">BlackFort &nbsp;  <i class="icon fa-fort-awesome fa-lg"></i></a> </h1>
+            <h1><a href="{% url 'index' %}">BlackFort &nbsp; <i class="icon fa-fort-awesome fa-lg"></i></a> </h1>
+
             <nav id="nav">
                 <ul>
                     {% if user.is_authenticated %}
                         <li>Hi! {{ user.username }}</li>
+                        <li><a href="{% url 'device_list' %}">Your devices</a></li>
                         <li><a href="{% url 'logout' %}" class="button navig">Log out</a></li>
                     {% else %}
                         <li><a href="{% url 'login' %}" class="button navig">Log in</a></li>
@@ -87,16 +89,20 @@
         </section>
 
         <!-- CTA -->
-        <section id="cta">
+        {% if user.is_authenticated %}
 
-            <h2>Not signed up yet?</h2>
-            <p>Blandit varius ut praesent nascetur eu penatibus nisi risus faucibus nunc.</p>
+        {% else %}
+            <section id="cta">
 
-            <form>
-                <a href="{% url 'register' %}" class="button">Sign up</a>
-            </form>
+                <h2>Not signed up yet?</h2>
+                <p>Blandit varius ut praesent nascetur eu penatibus nisi risus faucibus nunc.</p>
 
-        </section>
+                <form>
+                    <a href="{% url 'register' %}" class="button">Sign up</a>
+                </form>
+
+            </section>
+        {% endif %}
 
     <!-- Footer -->
     {% include "footer.html" %}
