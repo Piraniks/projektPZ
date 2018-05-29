@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.contenttypes.models import ContentType
 from django.views import View
 from django.db import transaction, IntegrityError
 from django.utils import timezone
@@ -54,7 +55,8 @@ class DeviceListView(LoginRequiredMixin, View):
     TEMPLATE = 'device/device_list.html'
 
     def get(self, request):
-        devices = Device.objects.filter(owner=request.user, is_active=True)
+        devices = Device.objects.filter(owner=request.user,
+                                        is_active=True).order_by('timestamp')
         return render(request, self.TEMPLATE, context={'devices': devices})
 
 
@@ -164,5 +166,7 @@ class VersionListView(LoginRequiredMixin, View):
         if request.user != device.owner:
             return render(request, TEMPLATE_403, status=status.HTTP_403_FORBIDDEN)
 
-        devices = Version.objects.filter(versioned_object=device)
+        device_content_type = ContentType.objects.get_for_model(device)
+        devices = Version.objects.filter(object_id=device.id,
+                                         content_type=device_content_type)
         return render(request, self.TEMPLATE, context={'versions': devices})

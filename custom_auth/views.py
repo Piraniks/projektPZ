@@ -11,6 +11,7 @@ from custom_auth.models import User
 
 class RegisterView(View):
     TEMPLATE = 'auth/register.html'
+    USER_EXISTS_ALREADY_MESSAGE = 'User with given username exists already.'
 
     def get(self, request):
         if request.user.is_authenticated:
@@ -36,7 +37,7 @@ class RegisterView(View):
             context = {
                 "errors": {
                     "username": [{
-                        "message": "User with given username exists already."
+                        "message": self.USER_EXISTS_ALREADY_MESSAGE
                     }],
                 }
             }
@@ -47,6 +48,7 @@ class RegisterView(View):
 
 class LoginView(View):
     TEMPLATE = 'auth/login.html'
+    USER_DOES_NOT_EXIST_MESSAGE = 'No user exists with given credentials.'
 
     def get(self, request):
         if request.user.is_authenticated:
@@ -72,7 +74,7 @@ class LoginView(View):
             context = {
                 "errors": {
                     "user": [{
-                        "message": "No user exists with given credentials."
+                        "message": self.USER_DOES_NOT_EXIST_MESSAGE
                     }],
                 }
             }
