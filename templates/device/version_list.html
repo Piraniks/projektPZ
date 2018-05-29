@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Your versions</title>
+{% endblock %}
+
+{% block content %}
+
+    <header>
+        <h2>Your versions</h2>
+        <hr />
+    </header>
+
+<body>
+    {% for version in versions %}
+        {{ version.name }}<br>
+        {{ version.uuid }}<br>
+        {{ version.creator.name }}<br><br>
+    {% endfor %}
+</body>
+
+{% endblock %}

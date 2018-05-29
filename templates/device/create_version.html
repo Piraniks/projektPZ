@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+     <header>
+        <h2>Create new version</h2>
+        <hr />
+    </header>
+
+    <form method="post" action="{% url 'version_create' device_uuid=device_uuid %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <center>
+            <input type="text" id="name" name="name" title="name" placeholder="File tag-name" required autofocus
+                   oninvalid="this.setCustomValidity('This field should not be left blank')"
+                   oninput="setCustomValidity('')" style="width:70%">
+            <input type="file" name="file" id="file" title="file">
+        </center><br>
+        <div class="row uniform">
+            <div class="12u">
+                <ul class="actions align-center">
+                    <li><input class="button" type="submit" value="Create" /></li>
+                </ul>
+            </div>
+        </div>
+    </form>
+{% endblock %}
