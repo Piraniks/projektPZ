@@ -10,12 +10,12 @@ from custom_auth.models import User
 
 
 class RegisterView(View):
-    TEMPLATE_PATH = 'auth/register.html'
+    TEMPLATE = 'auth/register.html'
 
     def get(self, request):
         if request.user.is_authenticated:
             return redirect('index')
-        return render(request, self.TEMPLATE_PATH)
+        return render(request, self.TEMPLATE)
 
     def post(self, request):
         form = RegisterForm(request.POST)
@@ -24,7 +24,7 @@ class RegisterView(View):
             context = {
                 "errors": json.loads(form.errors.as_json())
             }
-            return render(request, self.TEMPLATE_PATH, context=context)
+            return render(request, self.TEMPLATE, context=context)
 
         cleaned_data = form.cleaned_data
         username = cleaned_data.get('username')
@@ -40,18 +40,18 @@ class RegisterView(View):
                     }],
                 }
             }
-            return render(request, self.TEMPLATE_PATH, context=context)
+            return render(request, self.TEMPLATE, context=context)
 
         return redirect('login')
 
 
 class LoginView(View):
-    TEMPLATE_PATH = 'auth/login.html'
+    TEMPLATE = 'auth/login.html'
 
     def get(self, request):
         if request.user.is_authenticated:
             return redirect('index')
-        return render(request, self.TEMPLATE_PATH)
+        return render(request, self.TEMPLATE)
 
     def post(self, request):
         form = LoginForm(request.POST)
@@ -60,7 +60,7 @@ class LoginView(View):
             context = {
                 "errors": json.loads(form.errors.as_json())
             }
-            return render(request, self.TEMPLATE_PATH, context=context)
+            return render(request, self.TEMPLATE, context=context)
 
         cleaned_data = form.cleaned_data
         username = cleaned_data.get('username')
@@ -76,7 +76,7 @@ class LoginView(View):
                     }],
                 }
             }
-            return render(request, self.TEMPLATE_PATH, context=context)
+            return render(request, self.TEMPLATE, context=context)
 
         login(request, user)
         return redirect('device_list')

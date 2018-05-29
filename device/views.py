@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
+from django.db import transaction, IntegrityError
+from django.utils import timezone
 from rest_framework import status
 
 from projektPZ import TEMPLATE_404, TEMPLATE_403
-from device.models import Device
-from device.forms import DeviceForm
+from device.models import Device, Version
+from device.forms import DeviceForm, VersionForm
 
 
 class DeviceView(LoginRequiredMixin, View):
@@ -79,3 +81,88 @@ class DeviceCreateView(LoginRequiredMixin, View):
                 'errors': device_form.errors.as_json()
             }
             return render(request, self.TEMPLATE, context=context, status=status.HTTP_400_BAD_REQUEST)
+
+
+class VersionCreateView(LoginRequiredMixin, View):
+    TEMPLATE = 'device/create_version.html'
+    INTEGRITY_ERROR_MESSAGE = ('Integrity error has been encountered. '
+                               'Contact the service administrator.')
+
+    def get(self, request, device_uuid):
+        device = Device.objects.filter(uuid=device_uuid, is_active=True).first()
+
+        if device is None:
+            return render(request, TEMPLATE_404, status=status.HTTP_404_NOT_FOUND)
+
+        if request.user != device.owner:
+            return render(request, TEMPLATE_403, status=status.HTTP_403_FORBIDDEN)
+
+        return render(request, self.TEMPLATE, context={'device_uuid': device_uuid})
+
+    def post(self, request, device_uuid):
+        device = Device.objects.filter(uuid=device_uuid, is_active=True).first()
+
+        if device is None:
+            return render(request, TEMPLATE_404, status=status.HTTP_404_NOT_FOUND)
+
+        if request.user != device.owner:
+            return render(request, TEMPLATE_403, status=status.HTTP_403_FORBIDDEN)
+
+        version_form = VersionForm(data=request.POST, files=request.FILES)
+
+        if version_form.is_valid() is False:
+            context = {
+                'errors': version_form.errors.as_json(),
+                'device_uuid': device.uuid
+            }
+
+            return render(request, self.TEMPLATE,
+                          context=context, status=status.HTTP_400_BAD_REQUEST)
+
+        new_version = version_form.save(commit=False)
+        old_version = device.version
+
+        new_version.creator = request.user
+        new_version.versioned_object = device
+        new_version.previous = old_version
+
+        try:
+            with transaction.atomic():
+                new_version.save()
+
+                if old_version is not None:
+                    old_version.next = new_version
+                    old_version.save()
+
+                device.last_updated = timezone.now()
+                device.version = new_version
+                device.save()
+
+        except IntegrityError:
+            context = {
+                "errors": {
+                    "data": [{
+                        "message": self.INTEGRITY_ERROR_MESSAGE
+                    }],
+                },
+                'device_uuid': device.uuid
+            }
+            return render(request, self.TEMPLATE, context=context)
+
+        return redirect('device', device_uuid=device.uuid)
+
+
+class VersionListView(LoginRequiredMixin, View):
+    TEMPLATE = 'device/version_list.html'
+
+    def get(self, request, device_uuid):
+        device = Device.objects.filter(uuid=device_uuid, is_active=True).first()
+
+        if device is None:
+            return render(request, TEMPLATE_404, status=status.HTTP_404_NOT_FOUND)
+
+        if request.user != device.owner:
+            return render(request, TEMPLATE_403, status=status.HTTP_403_FORBIDDEN)
+
+        devices = Version.objects.filter(versioned_object=device)
+        return render(request, self.TEMPLATE, context={'versions': devices})
