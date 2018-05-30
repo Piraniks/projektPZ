@@ -1,0 +1,320 @@
+[
+{
+    "model": "custom_auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$100000$HHUyj36Xre3j$jfYROqYXt4Gli+FmSiZ1a8YpAZkLNEl14l4O9IyUlmE=",
+        "last_login": "2018-05-15T11:39:14.654Z",
+        "is_superuser": true,
+        "username": "admin2",
+        "is_staff": true,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "custom_auth.user",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$100000$9wahdKJpBmKQ$TNWsLdq0lTeL9JjNdiSiLGxBBMCoG5xxKQtGiaTJ1mY=",
+        "last_login": "2018-05-15T11:42:09.053Z",
+        "is_superuser": false,
+        "username": "user1",
+        "is_staff": false,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "custom_auth.user",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$100000$rMbuzl8mFOb0$UUEegL71VQsZRYX0lK7e9z/LWMWC3Go8v1/RfGIDKzU=",
+        "last_login": "2018-05-15T11:36:38.130Z",
+        "is_superuser": false,
+        "username": "user2",
+        "is_staff": false,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "custom_auth.user",
+    "pk": 4,
+    "fields": {
+        "password": "pbkdf2_sha256$100000$ciSjcHbv1piS$b17f0OkTfqZZmkemlq/bvZqQv/dE1BvrsCh48fcRzWo=",
+        "last_login": "2018-05-15T11:38:15.815Z",
+        "is_superuser": false,
+        "username": "user3",
+        "is_staff": false,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "custom_auth.user",
+    "pk": 5,
+    "fields": {
+        "password": "pbkdf2_sha256$100000$2meV7fNuWbmk$eFUkDuz0Oz4NntW2XMTl981DyVUDb99ZfL0Z2Ht+ee0=",
+        "last_login": "2018-05-15T11:41:08.508Z",
+        "is_superuser": false,
+        "username": "user4",
+        "is_staff": false,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "custom_auth.user",
+    "pk": 6,
+    "fields": {
+        "password": "pbkdf2_sha256$100000$9uBCcLKWyUdM$CG2PdK759op6+NQAkNymos0HI0WVVxtwjU11JVY8NT0=",
+        "last_login": "2018-05-15T11:34:26.852Z",
+        "is_superuser": false,
+        "username": "user5",
+        "is_staff": false,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "device.device",
+    "pk": 1,
+    "fields": {
+        "uuid": "bf6c2c40-4cab-49ba-8050-553f3830b6eb",
+        "name": "Device3U5",
+        "is_standalone": false,
+        "is_active": true,
+        "timestamp": "2018-05-15T11:34:49.953Z",
+        "last_edited": "2018-05-15T11:34:49.954Z",
+        "last_updated": null,
+        "version": null,
+        "owner": 6
+    }
+},
+{
+    "model": "device.device",
+    "pk": 2,
+    "fields": {
+        "uuid": "be0eeb2c-a1df-4f54-8e4f-ce21df88f77d",
+        "name": "Device1U5",
+        "is_standalone": false,
+        "is_active": true,
+        "timestamp": "2018-05-15T11:34:59.144Z",
+        "last_edited": "2018-05-15T11:34:59.144Z",
+        "last_updated": null,
+        "version": null,
+        "owner": 6
+    }
+},
+{
+    "model": "device.device",
+    "pk": 3,
+    "fields": {
+        "uuid": "e9092c20-3271-4470-b1b2-3e28bd74fe37",
+        "name": "Device1A2",
+        "is_standalone": false,
+        "is_active": true,
+        "timestamp": "2018-05-15T11:35:47.557Z",
+        "last_edited": "2018-05-15T11:35:47.558Z",
+        "last_updated": null,
+        "version": null,
+        "owner": 1
+    }
+},
+{
+    "model": "device.device",
+    "pk": 4,
+    "fields": {
+        "uuid": "a3db46ff-f762-4609-829f-84b10cce5342",
+        "name": "Device2A2",
+        "is_standalone": false,
+        "is_active": true,
+        "timestamp": "2018-05-15T11:35:54.299Z",
+        "last_edited": "2018-05-15T11:35:54.299Z",
+        "last_updated": null,
+        "version": null,
+        "owner": 1
+    }
+},
+{
+    "model": "device.device",
+    "pk": 5,
+    "fields": {
+        "uuid": "ea5c35f6-6db2-49c0-83ad-7f84a4ea7030",
+        "name": "Device3A2",
+        "is_standalone": false,
+        "is_active": true,
+        "timestamp": "2018-05-15T11:36:14.475Z",
+        "last_edited": "2018-05-15T11:36:14.475Z",
+        "last_updated": null,
+        "version": null,
+        "owner": 1
+    }
+},
+{
+    "model": "device.device",
+    "pk": 6,
+    "fields": {
+        "uuid": "8f77a921-ba39-49b0-8e38-17c5e09f8e05",
+        "name": "Device1U2",
+        "is_standalone": false,
+        "is_active": true,
+        "timestamp": "2018-05-15T11:36:46.709Z",
+        "last_edited": "2018-05-15T11:36:46.709Z",
+        "last_updated": null,
+        "version": null,
+        "owner": 3
+    }
+},
+{
+    "model": "device.device",
+    "pk": 7,
+    "fields": {
+        "uuid": "69ed466c-3c46-44a3-bc4a-a1c49b8a9cd5",
+        "name": "Device2U2",
+        "is_standalone": false,
+        "is_active": true,
+        "timestamp": "2018-05-15T11:36:58.460Z",
+        "last_edited": "2018-05-15T11:37:04.692Z",
+        "last_updated": null,
+        "version": null,
+        "owner": 3
+    }
+},
+{
+    "model": "device.device",
+    "pk": 8,
+    "fields": {
+        "uuid": "d0ea2b15-f4bf-4082-8922-1819afaf7368",
+        "name": "Device3U2",
+        "is_standalone": false,
+        "is_active": true,
+        "timestamp": "2018-05-15T11:37:13.305Z",
+        "last_edited": "2018-05-15T11:37:13.305Z",
+        "last_updated": null,
+        "version": null,
+        "owner": 3
+    }
+},
+{
+    "model": "device.device",
+    "pk": 9,
+    "fields": {
+        "uuid": "887f1821-3d7d-47e3-ae62-849001a8ec6d",
+        "name": "Device1U3",
+        "is_standalone": false,
+        "is_active": true,
+        "timestamp": "2018-05-15T11:37:46.559Z",
+        "last_edited": "2018-05-15T11:37:46.559Z",
+        "last_updated": null,
+        "version": null,
+        "owner": 4
+    }
+},
+{
+    "model": "device.device",
+    "pk": 10,
+    "fields": {
+        "uuid": "d784f6d7-6669-476f-a284-43efd645eaef",
+        "name": "Device2U3",
+        "is_standalone": false,
+        "is_active": true,
+        "timestamp": "2018-05-15T11:37:54.660Z",
+        "last_edited": "2018-05-15T11:37:54.661Z",
+        "last_updated": null,
+        "version": null,
+        "owner": 4
+    }
+},
+{
+    "model": "device.device",
+    "pk": 11,
+    "fields": {
+        "uuid": "1bb58ff3-4496-4661-8b58-ac0206017a1f",
+        "name": "Device3U3",
+        "is_standalone": false,
+        "is_active": true,
+        "timestamp": "2018-05-15T11:38:01.905Z",
+        "last_edited": "2018-05-15T11:38:01.905Z",
+        "last_updated": null,
+        "version": null,
+        "owner": 4
+    }
+},
+{
+    "model": "device.device",
+    "pk": 12,
+    "fields": {
+        "uuid": "fd14d490-5a97-4fb7-975d-8e6120879e3d",
+        "name": "Device4U3",
+        "is_standalone": false,
+        "is_active": true,
+        "timestamp": "2018-05-15T11:38:24.924Z",
+        "last_edited": "2018-05-15T11:38:24.924Z",
+        "last_updated": null,
+        "version": null,
+        "owner": 4
+    }
+},
+{
+    "model": "device.device",
+    "pk": 13,
+    "fields": {
+        "uuid": "6ac2e1c7-aa96-4509-a0c5-4e18bda203a0",
+        "name": "Device1U4",
+        "is_standalone": false,
+        "is_active": true,
+        "timestamp": "2018-05-15T11:41:36.140Z",
+        "last_edited": "2018-05-15T11:41:36.140Z",
+        "last_updated": null,
+        "version": null,
+        "owner": 5
+    }
+},
+{
+    "model": "device.device",
+    "pk": 14,
+    "fields": {
+        "uuid": "8a330042-3157-4a00-b9ae-57eb6e94d7d8",
+        "name": "Device2U4",
+        "is_standalone": false,
+        "is_active": true,
+        "timestamp": "2018-05-15T11:41:49.603Z",
+        "last_edited": "2018-05-15T11:41:49.603Z",
+        "last_updated": null,
+        "version": null,
+        "owner": 5
+    }
+},
+{
+    "model": "device.device",
+    "pk": 15,
+    "fields": {
+        "uuid": "27305a85-3092-4b48-93da-f0a74d6d2c31",
+        "name": "Device1U1",
+        "is_standalone": false,
+        "is_active": true,
+        "timestamp": "2018-05-15T11:42:25.714Z",
+        "last_edited": "2018-05-15T11:42:25.714Z",
+        "last_updated": null,
+        "version": null,
+        "owner": 2
+    }
+},
+{
+    "model": "device.device",
+    "pk": 16,
+    "fields": {
+        "uuid": "1d317395-111d-40ee-aa10-cf61dd5f193f",
+        "name": "Device2U1",
+        "is_standalone": false,
+        "is_active": true,
+        "timestamp": "2018-05-15T11:42:35.721Z",
+        "last_edited": "2018-05-15T11:42:35.721Z",
+        "last_updated": null,
+        "version": null,
+        "owner": 2
+    }
+}
+]
