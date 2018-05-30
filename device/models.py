@@ -74,16 +74,9 @@ class Device(models.Model):
         if self.is_up_to_date:
             return False
 
-        current_version = self.version
-        if current_version is None:
-            raise Exception('Version for the device is not specified.')
-
-        next_version = current_version.next
+        next_version = self.version.next
         if next_version is None:
-            raise Exception(
-                f'Version { current_version.name }({ current_version.uuid }) '
-                'is not considered latest while there is no next version.'
-            )
+            return None
 
         self.version = next_version
         self.last_updated = timezone.now()
