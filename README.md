@@ -78,4 +78,3 @@ Sprawi ono, iż pod adresem [https://localhost:8080](https://localhost:8080) bę
 Jeśli wszystko się udało, powinien pojawić się ekran powitalny.
 Dodatkowo w katalogu z projektem powinien pojawić się plik z bazą danych o nazwie `db.sqlite3`.
 
-
