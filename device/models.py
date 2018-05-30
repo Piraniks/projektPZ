@@ -10,20 +10,8 @@ from django.utils import timezone
 User = get_user_model()
 
 
-class File(models.Model):
-    uuid = models.UUIDField(default=uuid.uuid4, unique=True)
-    name = models.CharField(max_length=50)
-    data = models.BinaryField()
-    timestamp = models.DateTimeField(auto_now_add=True)
-
-    uploader = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-
-    class Meta:
-        ordering = ['-id']
-        get_latest_by = 'timestamp'
-
-    def __str__(self):
-        return self.name
+def versioned_object_directory(instance, filename):
+    return f'{instance.versioned_object.uuid}/{uuid.uuid4()}_{filename}'
 
 
 class Version(models.Model):
@@ -36,7 +24,7 @@ class Version(models.Model):
     object_id = models.PositiveIntegerField(null=True)
     versioned_object = GenericForeignKey('content_type', 'object_id')
 
-    file = models.ForeignKey(File, on_delete=models.SET_NULL, null=True)
+    file = models.FileField(null=True, upload_to=versioned_object_directory)
     creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     previous = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='+')
@@ -77,7 +65,7 @@ class Device(models.Model):
         if version is None:
             return True
 
-        if version.next is None:
+        if version.next is None or version.uuid == version.next.uuid:
             return True
 
         return False
@@ -93,7 +81,7 @@ class Device(models.Model):
         next_version = current_version.next
         if next_version is None:
             raise Exception(
-                'Version { current_version.name }({ current_version.uuid }) '
+                f'Version { current_version.name }({ current_version.uuid }) '
                 'is not considered latest while there is no next version.'
             )
 
