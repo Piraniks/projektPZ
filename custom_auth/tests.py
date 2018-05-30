@@ -214,7 +214,7 @@ class LoginUserTestCase(TestCase):
         }
         response = self.client.post('/login/', data)
 
-        self.assertRedirects(response, reverse('index'))
+        self.assertRedirects(response, reverse('device_list'))
 
 
 class LogoutUserTestCase(TestCase):
