@@ -15,7 +15,8 @@
     {% for version in versions %}
         {{ version.name }}<br>
         {{ version.uuid }}<br>
-        {{ version.creator.name }}<br><br>
+        {{ version.creator.username }}<br>
+        {{ version.timestamp | date:'Y-m-d H:i:s' }}<br><br>
     {% endfor %}
 </body>
 
