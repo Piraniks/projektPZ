@@ -202,26 +202,6 @@ class DeviceTestCase(TransactionTestCase):
         self.assertEqual(updated_device.ip_address, self.device.ip_address)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_edit_ip_addess_with_empty_ip_address(self):
-        new_ip_address = ''
-
-        self.client.force_login(self.device_owner)
-
-        request_data = {
-            'name': self.device.name,
-            'ip_address': new_ip_address,
-            'is_active': True
-        }
-        response = self.client.post(
-            reverse('device', kwargs={'device_uuid': self.device.uuid}),
-            request_data
-        )
-
-        updated_device = Device.objects.get(pk=self.device.pk)
-
-        self.assertEqual(updated_device.ip_address, self.device.ip_address)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
     def test_edit_as_owner_with_valid_name(self):
         new_name = 'new_name'
 
@@ -243,14 +223,10 @@ class DeviceTestCase(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_delete_device(self):
-        is_active = False
-
         self.client.force_login(self.device_owner)
 
         request_data = {
-            'is_active': is_active,
-            'name': self.device.name,
-            'ip_address': self.device.ip_address,
+            'name': self.device.name
         }
         response = self.client.post(
             reverse('device', kwargs={'device_uuid': self.device.uuid}),

@@ -15,6 +15,19 @@ class DeviceForm(forms.ModelForm):
         exclude = ['id']
 
 
+class DeviceEditForm(forms.ModelForm):
+    uuid = forms.UUIDField(disabled=True, required=False)
+    last_updated = forms.DateTimeField(disabled=True, required=False)
+
+    version = forms.IntegerField(disabled=True, min_value=0, required=False)
+    owner = forms.IntegerField(disabled=True, min_value=0, required=False)
+    ip_address = forms.GenericIPAddressField(required=False, disabled=True)
+
+    class Meta:
+        model = Device
+        exclude = ['id']
+
+
 class VersionForm(forms.ModelForm):
     uuid = forms.UUIDField(disabled=True, required=False)
     timestamp = forms.DateTimeField(disabled=True, required=False)
