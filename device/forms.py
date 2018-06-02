@@ -18,6 +18,7 @@ class DeviceForm(forms.ModelForm):
 class VersionForm(forms.ModelForm):
     uuid = forms.UUIDField(disabled=True, required=False)
     timestamp = forms.DateTimeField(disabled=True, required=False)
+    file_checksum = forms.Field(disabled=True, required=False)
 
     name = forms.CharField(max_length=50)
     creator = forms.IntegerField(disabled=True, min_value=0, required=False)

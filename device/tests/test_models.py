@@ -9,7 +9,8 @@ class DeviceTestCase(TransactionTestCase):
         self.user = User.objects.create_user(username='user',
                                              password='password')
         self.device = Device.objects.create(name='device',
-                                            owner=self.user)
+                                            owner=self.user,
+                                            ip_address='192.168.1.1')
 
     def test_is_up_to_date_with_none_version(self):
         is_up_to_date = self.device.is_up_to_date

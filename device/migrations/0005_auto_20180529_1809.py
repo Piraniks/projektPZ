@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='version',
             name='file',
-            field=models.FileField(null=True, upload_to=device.models.versioned_object_directory),
+            field=models.FileField(null=True, upload_to=device.models.uploaded_file_path),
         ),
         migrations.DeleteModel(
             name='File',

@@ -1,6 +1,7 @@
 from django.test import TestCase, TransactionTestCase
 from django.shortcuts import reverse
-from rest_framework import status
+
+from projektPZ import status
 
 from custom_auth.models import User
 
