@@ -153,7 +153,7 @@ class VersionCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
             }
             return render(request, self.TEMPLATE, context=context)
 
-        return redirect('device', device_uuid=device.uuid)
+        return redirect('version_list', device_uuid=device.uuid)
 
 
 class VersionListView(DevicePermissionMixin, LoginRequiredMixin, View):

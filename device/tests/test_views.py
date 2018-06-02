@@ -414,7 +414,7 @@ class CreateVersionTestCase(TransactionTestCase):
         version_created = Version.objects.filter(name=version_name).first()
 
         self.assertRedirects(response,
-                             reverse('device',
+                             reverse('version_list',
                                      kwargs={'device_uuid': self.device.uuid})
                              )
         self.assertIsNotNone(version_created)
@@ -442,7 +442,7 @@ class CreateVersionTestCase(TransactionTestCase):
         old_version = Version.objects.get(name=old_version_name)
 
         self.assertRedirects(response,
-                             reverse('device',
+                             reverse('version_list',
                                      kwargs={'device_uuid': self.device.uuid})
                              )
         self.assertNotEqual(new_version.uuid, old_version.uuid)
