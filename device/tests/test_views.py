@@ -3,7 +3,8 @@ from uuid import uuid4
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TransactionTestCase
 from django.shortcuts import reverse
-from rest_framework import status
+
+from projektPZ import status
 
 from custom_auth.models import User
 from device.models import Device, Version

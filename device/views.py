@@ -3,10 +3,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
 from django.views import View
 from django.db import transaction, IntegrityError
-from django.utils import timezone
-from rest_framework import status
 
+from projektPZ import status
 from projektPZ import TEMPLATE_404, TEMPLATE_403
+
 from device.models import Device, Version
 from device.forms import DeviceForm, VersionForm
 
