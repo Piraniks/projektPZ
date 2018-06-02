@@ -8,7 +8,7 @@ from django.utils import timezone
 from projektPZ import status
 
 from device.models import Device, Version
-from device.forms import DeviceForm, VersionForm
+from device.forms import DeviceForm, VersionForm, DeviceEditForm
 from device.mixins import DevicePermissionMixin
 
 
@@ -31,7 +31,7 @@ class DeviceView(DevicePermissionMixin, LoginRequiredMixin, View):
             return response
 
         device = Device.objects.get(uuid=device_uuid)
-        device_form = DeviceForm(request.POST)
+        device_form = DeviceEditForm(request.POST)
 
         if device_form.is_valid():
             device.name = device_form.cleaned_data.get('name', device.name)
@@ -153,7 +153,7 @@ class VersionCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
             }
             return render(request, self.TEMPLATE, context=context)
 
-        return redirect('device', device_uuid=device.uuid)
+        return redirect('version_list', device_uuid=device.uuid)
 
 
 class VersionListView(DevicePermissionMixin, LoginRequiredMixin, View):
