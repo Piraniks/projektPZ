@@ -170,4 +170,8 @@ class VersionListView(DevicePermissionMixin, LoginRequiredMixin, View):
         device_content_type = ContentType.objects.get_for_model(device)
         devices = Version.objects.filter(object_id=device.id,
                                          content_type=device_content_type)
-        return render(request, self.TEMPLATE, context={'versions': devices})
+        context = {
+            'versions': devices,
+            'device_uuid': device.uuid
+        }
+        return render(request, self.TEMPLATE, context=context)
