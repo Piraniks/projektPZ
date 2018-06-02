@@ -27,7 +27,7 @@ venv\Scripts\activate
 
 Bash:
 ```
-source venv/Scripts/activate
+source venv/bin/activate
 ```
 
 ### Instalacja wymaganych pakietów
