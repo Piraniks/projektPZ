@@ -61,7 +61,7 @@ class DeviceListView(LoginRequiredMixin, View):
 
 
 class DeviceCreateView(LoginRequiredMixin, View):
-    TEMPLATE = 'device/create_device.html'
+    TEMPLATE = 'device/device_create.html'
 
     def get(self, request):
         return render(request, self.TEMPLATE)
@@ -86,7 +86,7 @@ class DeviceCreateView(LoginRequiredMixin, View):
 
 
 class VersionCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
-    TEMPLATE = 'device/create_version.html'
+    TEMPLATE = 'device/version_create.html'
     INTEGRITY_ERROR_MESSAGE = ('Integrity error has been encountered. '
                                'Contact the service administrator.')
 
