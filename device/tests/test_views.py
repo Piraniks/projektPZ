@@ -7,18 +7,26 @@ from django.shortcuts import reverse
 from projektPZ import status
 
 from custom_auth.models import User
+
 from device.models import Device, Version
 
 
 class DeviceCreateTestCase(TransactionTestCase):
     def setUp(self):
-        self.device_owner = User.objects.create_user(username='owner', password='password')
+        self.device_owner = User.objects.create_user(username='owner',
+                                                     password='password')
+
+        self.client.force_login(self.device_owner)
 
     def test_create_device_with_valid_data_redirects_to_new_device_site(self):
         device_name = 'device'
+        ip_address = '192.168.1.1'
 
-        self.client.force_login(self.device_owner)
-        response = self.client.post(reverse('device_create'), {'name': device_name})
+        request_data = {
+            'name': device_name,
+            'ip_address': ip_address
+        }
+        response = self.client.post(reverse('device_create'), request_data)
 
         device = Device.objects.filter(name=device_name).first()
 
@@ -29,9 +37,28 @@ class DeviceCreateTestCase(TransactionTestCase):
 
     def test_create_device_with_empty_string_name(self):
         device_name = ''
+        ip_address = '192.168.1.1'
 
-        self.client.force_login(self.device_owner)
-        response = self.client.post(reverse('device_create'), {'name': device_name})
+        request_data = {
+            'name': device_name,
+            'ip_address': ip_address
+        }
+        response = self.client.post(reverse('device_create'), request_data)
+
+        device = Device.objects.filter(name=device_name).first()
+
+        self.assertIsNone(device)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_create_device_with_empty_ip_address(self):
+        device_name = 'device'
+        ip_address = ''
+
+        request_data = {
+            'name': device_name,
+            'ip_address': ip_address
+        }
+        response = self.client.post(reverse('device_create'), request_data)
 
         device = Device.objects.filter(name=device_name).first()
 
@@ -41,8 +68,12 @@ class DeviceCreateTestCase(TransactionTestCase):
 
 class DeviceTestCase(TransactionTestCase):
     def setUp(self):
-        self.device_owner = User.objects.create_user(username='owner', password='password')
-        self.device = Device.objects.create(name='device', owner=self.device_owner)
+        self.device_owner = User.objects.create_user(username='owner',
+                                                     password='password')
+
+        self.device = Device.objects.create(name='device',
+                                            owner=self.device_owner,
+                                            ip_address='192.168.1.1')
 
     def test_allow_owner_to_see_device(self):
         self.client.force_login(self.device_owner)
@@ -66,14 +97,29 @@ class DeviceTestCase(TransactionTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
+    def test_inactive_device_redirects_authenticated_user_to_404(self):
+        self.client.force_login(self.device_owner)
+
+        self.device.is_active = False
+        self.device.save()
+
+        response = self.client.get(reverse('device', kwargs={'device_uuid': self.device.uuid}))
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
     def test_edit_not_existing_device_redirects_authenticated_user_to_404(self):
         not_existing_uuid = uuid4()
         new_name = 'new_name'
 
         self.client.force_login(self.device_owner)
+
+        request_data = {
+            'name': new_name,
+            'ip_address': self.device.ip_address
+        }
         response = self.client.post(
             reverse('device', kwargs={'device_uuid': not_existing_uuid}),
-            {'name': new_name}
+            request_data
         )
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
@@ -83,9 +129,14 @@ class DeviceTestCase(TransactionTestCase):
         new_name = 'new_name'
 
         self.client.force_login(not_owner)
+
+        request_data = {
+            'name': new_name,
+            'ip_address': self.device.ip_address
+        }
         response = self.client.post(
             reverse('device', kwargs={'device_uuid': self.device.uuid}),
-            {'name': new_name}
+            request_data
         )
 
         updated_device = Device.objects.get(pk=self.device.pk)
@@ -94,12 +145,17 @@ class DeviceTestCase(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_edit_as_owner_with_too_long_name(self):
-        too_long_name = 'x' * 51
+        new_name = 'x' * 51
 
         self.client.force_login(self.device_owner)
+
+        request_data = {
+            'name': new_name,
+            'ip_address': self.device.ip_address
+        }
         response = self.client.post(
             reverse('device', kwargs={'device_uuid': self.device.uuid}),
-            {'name': too_long_name}
+            request_data
         )
 
         updated_device = Device.objects.get(pk=self.device.pk)
@@ -108,12 +164,17 @@ class DeviceTestCase(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_edit_as_owner_with_empty_string_name(self):
-        too_long_name = ''
+        new_name = ''
 
         self.client.force_login(self.device_owner)
+
+        request_data = {
+            'name': new_name,
+            'ip_address': self.device.ip_address
+        }
         response = self.client.post(
             reverse('device', kwargs={'device_uuid': self.device.uuid}),
-            {'name': too_long_name}
+            request_data
         )
 
         updated_device = Device.objects.get(pk=self.device.pk)
@@ -121,13 +182,59 @@ class DeviceTestCase(TransactionTestCase):
         self.assertEqual(updated_device.name, self.device.name)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_edit_ip_addess_with_new_ip_address(self):
+        new_ip_address = '8.8.8.8'
+
+        self.client.force_login(self.device_owner)
+
+        request_data = {
+            'name': self.device.name,
+            'ip_address': new_ip_address,
+            'is_active': True
+        }
+        response = self.client.post(
+            reverse('device', kwargs={'device_uuid': self.device.uuid}),
+            request_data
+        )
+
+        updated_device = Device.objects.get(pk=self.device.pk)
+
+        self.assertEqual(updated_device.ip_address, self.device.ip_address)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_edit_ip_addess_with_empty_ip_address(self):
+        new_ip_address = ''
+
+        self.client.force_login(self.device_owner)
+
+        request_data = {
+            'name': self.device.name,
+            'ip_address': new_ip_address,
+            'is_active': True
+        }
+        response = self.client.post(
+            reverse('device', kwargs={'device_uuid': self.device.uuid}),
+            request_data
+        )
+
+        updated_device = Device.objects.get(pk=self.device.pk)
+
+        self.assertEqual(updated_device.ip_address, self.device.ip_address)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_edit_as_owner_with_valid_name(self):
         new_name = 'new_name'
 
         self.client.force_login(self.device_owner)
+
+        request_data = {
+            'name': new_name,
+            'ip_address': self.device.ip_address,
+            'is_active': True
+        }
         response = self.client.post(
             reverse('device', kwargs={'device_uuid': self.device.uuid}),
-            {'name': new_name}
+            request_data
         )
 
         updated_device = Device.objects.get(pk=self.device.pk)
@@ -135,12 +242,39 @@ class DeviceTestCase(TransactionTestCase):
         self.assertEqual(updated_device.name, new_name)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_delete_device(self):
+        is_active = False
+
+        self.client.force_login(self.device_owner)
+
+        request_data = {
+            'is_active': is_active,
+            'name': self.device.name,
+            'ip_address': self.device.ip_address,
+        }
+        response = self.client.post(
+            reverse('device', kwargs={'device_uuid': self.device.uuid}),
+            request_data
+        )
+
+        updated_device = Device.objects.get(pk=self.device.pk)
+
+        self.assertFalse(updated_device.is_active)
+        self.assertRedirects(response, reverse('device_list'))
+
 
 class VersionTestCase(TransactionTestCase):
     def setUp(self):
-        self.device_owner = User.objects.create_user(username='owner', password='password')
-        self.device = Device.objects.create(name='device', owner=self.device_owner)
-        self.version = Version.objects.create(name='version', versioned_object=self.device)
+        self.device_owner = User.objects.create_user(username='owner',
+                                                     password='password')
+
+        self.device = Device.objects.create(name='device',
+                                            owner=self.device_owner,
+                                            ip_address='192.168.1.1')
+
+        self.version = Version.objects.create(name='version',
+                                              versioned_object=self.device)
+
         self.device.version = self.version
         self.device.save()
 
@@ -177,8 +311,12 @@ class VersionTestCase(TransactionTestCase):
 
 class CreateVersionTestCase(TransactionTestCase):
     def setUp(self):
-        self.device_owner = User.objects.create_user(username='owner', password='password')
-        self.device = Device.objects.create(name='device', owner=self.device_owner)
+        self.device_owner = User.objects.create_user(username='owner',
+                                                     password='password')
+
+        self.device = Device.objects.create(name='device',
+                                            owner=self.device_owner,
+                                            ip_address='192.168.1.1')
 
     def test_get_version_create_view_for_valid_device(self):
         self.client.force_login(self.device_owner)
@@ -273,14 +411,14 @@ class CreateVersionTestCase(TransactionTestCase):
             data={'name': version_name, 'file': version_file}
         )
 
-        device = Device.objects.get(pk=self.device.pk)
+        version_created = Version.objects.filter(name=version_name).first()
 
         self.assertRedirects(response,
                              reverse('device',
                                      kwargs={'device_uuid': self.device.uuid})
                              )
-        self.assertIsNotNone(device.last_updated)
-        self.assertIsNotNone(device.version)
+        self.assertIsNotNone(version_created)
+        self.assertEqual(version_created.versioned_object.id, self.device.id)
 
     def test_post_with_existing_older_version(self):
         old_version_name = 'test'
