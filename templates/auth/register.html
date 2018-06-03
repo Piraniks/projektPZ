@@ -10,7 +10,7 @@
 
 {% block content %}
 
-    <section id="main" class="container 50%" style="min-height: 30em;">
+    <section id="main" class="container 50%">
 
         <header>
             <h2>Register</h2>
@@ -55,8 +55,8 @@
                      <div>
                          {% for field, errors in errors.items %}
                              {% for error in errors %}
-                                 <b style="color:red"> {{ error.message }} </b>
-                                 </br>
+                                 <b class="error"> {{ error.message }} </b>
+                                 <br>
                              {% endfor %}
                          {% endfor %}
                     </div>

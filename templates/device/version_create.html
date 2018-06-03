@@ -1,29 +1,37 @@
 {% extends 'base.html' %}
+
+{% block title %}
+    <title>Create new version</title>
+{% endblock %}
+
 {% block content %}
 
-    <section id="main" class="container 50%" style="min-height: 30em;">
+    <section id="main" class="container 50%">
 
         <header>
             <h2>Create new version</h2>
             <hr />
         </header>
 
-        <a href="{% url 'version_list' device_uuid=device_uuid %}" style="position: fixed; color: #666;  left: 1em; top: 4em;"><i class="icon fa-angle-left fa-2x"></i></a>
+        <a href="{% url 'version_list' device_uuid=device_uuid %}" class="arrow_back"><i class="icon fa-angle-left fa-2x"></i></a>
 
         <form method="post" action="{% url 'version_create' device_uuid=device_uuid %}" enctype="multipart/form-data">
+
             {% csrf_token %}
+
             <center>
-                <input type="text" id="name" name="name" title="name" placeholder="File tag-name" required autofocus
-                       oninvalid="this.setCustomValidity('This field should not be left blank')"
-                       oninput="setCustomValidity('')" style="width:65%">
-                <br>
+                <div class="input-width">
 
+                    <input type="text" id="name" name="name" title="name" placeholder="File tag-name" required autofocus
+                           oninvalid="this.setCustomValidity('This field should not be left blank')"
+                           oninput="setCustomValidity('')">
+                    <br>
 
-            <input type="file" name="file" id="file" title="file" required
-                       oninvalid="this.setCustomValidity('You must choose a file')"
-                       oninput="setCustomValidity('')" style="width:55%">
+                    <input type="file" name="file" id="file" title="file" required
+                               oninvalid="this.setCustomValidity('You must choose a file')"
+                               oninput="setCustomValidity('')">
 
-
+                </div>
             </center><br>
 
             <div class="row uniform">
@@ -41,8 +49,8 @@
             <div>
                  {% for field, errors in errors.items %}
                      {% for error in errors %}
-                         <b style="color:red"> {{ error.message }} </b>
-                         </br>
+                         <b class="error"> {{ error.message }} </b>
+                         <br>
                      {% endfor %}
                  {% endfor %}
             </div>
