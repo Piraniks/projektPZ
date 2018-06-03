@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
@@ -46,7 +48,7 @@ class DeviceView(DevicePermissionMixin, LoginRequiredMixin, View):
         else:
             context = {
                 'device': device,
-                'errors': device_form.errors.as_json()
+                'errors': json.loads(device_form.errors.as_json())
             }
             return render(request, self.TEMPLATE, context=context, status=status.HTTP_400_BAD_REQUEST)
 
@@ -80,7 +82,7 @@ class DeviceCreateView(LoginRequiredMixin, View):
             return redirect('device_list')
         else:
             context = {
-                'errors': device_form.errors.as_json()
+                'errors': json.loads(device_form.errors.as_json())
             }
             return render(request, self.TEMPLATE, context=context, status=status.HTTP_400_BAD_REQUEST)
 
@@ -110,7 +112,7 @@ class VersionCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
 
         if version_form.is_valid() is False:
             context = {
-                'errors': version_form.errors.as_json(),
+                'errors': json.loads(version_form.errors.as_json()),
                 'device_uuid': device.uuid
             }
 
