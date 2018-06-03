@@ -10,7 +10,7 @@
 
 {% block content %}
 
-    <section id="main" class="container 50%" style="min-height: 30em;">
+    <section id="main" class="container 50%">
 
         <header>
             <h2>Register</h2>
@@ -49,6 +49,18 @@
                         </ul>
                     </div>
                 </div>
+
+                {%  if errors %}
+                    <br>
+                     <div>
+                         {% for field, errors in errors.items %}
+                             {% for error in errors %}
+                                 <b class="error"> {{ error.message }} </b>
+                                 <br>
+                             {% endfor %}
+                         {% endfor %}
+                    </div>
+                {%  endif %}
 
             </form>
         </div>

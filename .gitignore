@@ -105,3 +105,6 @@ ENV/
 
 # database
 *.sqlite3
+
+media/
+!media/.keep

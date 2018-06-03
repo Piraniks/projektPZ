@@ -21,6 +21,10 @@ from django.conf.urls.static import static
 from projektPZ.views import IndexView
 
 
+handler404 = 'projektPZ.views.handler404'
+handler403 = 'projektPZ.views.handler403'
+handler500 = 'projektPZ.views.handler404'  # not to show server errors
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', IndexView.as_view(), name='index'),
