@@ -1,110 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>BlackFort</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <head>
+        <meta charset="UTF-8">
+        <title>BlackFort</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    {% load static %}
-    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
-    <link type="text/css" rel="stylesheet" href="{% static 'assets/css/main.css' %}">
+        {% load static %}
+        <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
+        <link type="text/css" rel="stylesheet" href="{% static 'assets/css/main.css' %}">
 
-    <!-- Scripts -->
-    <script src="{% static 'assets/js/jquery.min.js' %}"></script>
-    <script src="{% static 'assets/js/jquery.dropotron.min.js' %}"></script>
-    <script src="{% static 'assets/js/jquery.scrollgress.min.js' %}"></script>
-    <script src="{% static 'assets/js/skel.min.js' %}"></script>
-    <script src="{% static 'assets/js/util.js' %}"></script>
-    <script src="{% static 'assets/js/main.js' %}"></script>
-</head>
+        <!-- Scripts -->
+        <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+        <script src="{% static 'assets/js/jquery.dropotron.min.js' %}"></script>
+        <script src="{% static 'assets/js/jquery.scrollgress.min.js' %}"></script>
+        <script src="{% static 'assets/js/skel.min.js' %}"></script>
+        <script src="{% static 'assets/js/util.js' %}"></script>
+        <script src="{% static 'assets/js/main.js' %}"></script>
+    </head>
 
-<body class="landing">
-    <div id="page-wrapper">
+    <body class="landing">
+        <div id="page-wrapper">
 
-        <!-- Header -->
-        <header id="header" class="alt">
-            <h1><a href="{% url 'index' %}">BlackFort &nbsp; <i class="icon fa-fort-awesome fa-lg"></i></a> </h1>
+            <!-- Header -->
+            <header id="header" class="alt">
+                <h1><a href="{% url 'index' %}">BlackFort &nbsp; <i class="icon fa-fort-awesome fa-lg"></i></a> </h1>
 
-            <nav id="nav">
-                <ul>
-                    {% if user.is_authenticated %}
-                        <li>Hi! {{ user.username }}</li>
-                        <li><a href="{% url 'device_list' %}">Your devices</a></li>
-                        <li><a href="{% url 'logout' %}" class="button navig">Log out</a></li>
-                    {% else %}
-                        <li><a href="{% url 'login' %}" class="button navig">Log in</a></li>
-                    {% endif %}
+                <nav id="nav">
+                    <ul>
+                        {% if user.is_authenticated %}
+                            <li>Hi! {{ user.username }}</li>
+                            <li><a href="{% url 'device_list' %}">Your devices</a></li>
+                            <li><a href="{% url 'logout' %}" class="button navig">Log out</a></li>
+                        {% else %}
+                            <li><a href="{% url 'login' %}" class="button navig">Log in</a></li>
+                        {% endif %}
 
-                </ul>
-            </nav>
-        </header>
+                    </ul>
+                </nav>
+            </header>
 
-        <!-- Banner -->
-        <section id="banner">
-            <h2>BlackFort</h2>
-            <p>Devices management</p>
-        </section>
-
-        <!-- Main -->
-        <section id="main" class="container">
-
-            <section class="box special">
-                <header class="major">
-                    <h2>Introducing Blackfort</h2>
-                    <p>The improvement for device management. With this application management of devices in your office become as easy as a pie!</p>
-                </header>
-                <span class="image featured"><img src="{% static 'images/pic01.jpg' %}" alt="" /></span>
+            <!-- Banner -->
+            <section id="banner">
+                <h2>BlackFort</h2>
+                <p>Devices management</p>
             </section>
 
-            <section class="box special features">
-                <div class="features-row">
-                    <section>
-                        <span class="icon major fa-bolt accent2"></span>
-                        <h3>Energy-efficient</h3>
-                        <p>This is web application, so it does not need energy to run always!</p>
-                    </section>
-                    <section>
-                        <span class="icon major fa-area-chart accent3"></span>
-                        <h3>Super-productive</h3>
-                        <p>This application is faster than Passat 1.9 TDI! Subpages load in blink of an aye!</p>
-                    </section>
-                </div>
-                <div class="features-row">
-                    <section>
-                        <span class="icon major fa-cloud accent4"></span>
-                        <h3>Everyone will be jelaous</h3>
-                        <p>Stand out from the crowd! You will make great impression on your co-workers with this application!</p>
-                    </section>
-                    <section>
-                        <span class="icon major fa-lock accent5"></span>
-                        <h3>High security standard</h3>
-                        <p>Your secrets are safe with us! Trust us! We will not let you down!</p>
-                    </section>
-                </div>
-            </section>
+            <!-- Main -->
+            <section id="main" class="container">
 
-        </section>
+                <section class="box special">
+                    <header class="major">
+                        <h2>Introducing Blackfort</h2>
+                        <p>The improvement for device management. With this application management of devices in your office become as easy as a pie!</p>
+                    </header>
+                    <span class="image featured"><img src="{% static 'images/pic01.jpg' %}" alt="" /></span>
+                </section>
 
-        <!-- CTA -->
-        {% if user.is_authenticated %}
-
-        {% else %}
-            <section id="cta">
-
-                <h2>Not signed up yet?</h2>
-                <p>Blandit varius ut praesent nascetur eu penatibus nisi risus faucibus nunc.</p>
-
-                <form>
-                    <a href="{% url 'register' %}" class="button">Sign up</a>
-                </form>
+                <section class="box special features">
+                    <div class="features-row">
+                        <section>
+                            <span class="icon major fa-bolt accent2"></span>
+                            <h3>Energy-efficient</h3>
+                            <p>This is web application, so it does not need energy to run always!</p>
+                        </section>
+                        <section>
+                            <span class="icon major fa-area-chart accent3"></span>
+                            <h3>Super-productive</h3>
+                            <p>This application is faster than Passat 1.9 TDI! Subpages load in blink of an aye!</p>
+                        </section>
+                    </div>
+                    <div class="features-row">
+                        <section>
+                            <span class="icon major fa-cloud accent4"></span>
+                            <h3>Everyone will be jelaous</h3>
+                            <p>Stand out from the crowd! You will make great impression on your co-workers with this application!</p>
+                        </section>
+                        <section>
+                            <span class="icon major fa-lock accent5"></span>
+                            <h3>High security standard</h3>
+                            <p>Your secrets are safe with us! Trust us! We will not let you down!</p>
+                        </section>
+                    </div>
+                </section>
 
             </section>
-        {% endif %}
 
-    <!-- Footer -->
-    {% include "footer.html" %}
+            <!-- CTA -->
+            {% if user.is_authenticated %}
 
-    </div>
+            {% else %}
+                <section id="cta">
 
-</body>
+                    <h2>Not signed up yet?</h2>
+                    <p>Blandit varius ut praesent nascetur eu penatibus nisi risus faucibus nunc.</p>
+
+                    <form>
+                        <a href="{% url 'register' %}" class="button">Sign up</a>
+                    </form>
+
+                </section>
+            {% endif %}
+
+        <!-- Footer -->
+        {% include "footer.html" %}
+
+        </div>
+
+    </body>
 </html>
