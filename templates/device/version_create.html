@@ -1,24 +1,52 @@
 {% extends 'base.html' %}
 {% block content %}
-     <header>
-        <h2>Create new version</h2>
-        <hr />
-    </header>
 
-    <form method="post" action="{% url 'version_create' device_uuid=device_uuid %}" enctype="multipart/form-data">
-        {% csrf_token %}
-        <center>
-            <input type="text" id="name" name="name" title="name" placeholder="File tag-name" required autofocus
-                   oninvalid="this.setCustomValidity('This field should not be left blank')"
-                   oninput="setCustomValidity('')" style="width:70%">
+    <section id="main" class="container 50%" style="min-height: 30em;">
+
+        <header>
+            <h2>Create new version</h2>
+            <hr />
+        </header>
+
+        <a href="{% url 'version_list' device_uuid=device_uuid %}" style="position: fixed; color: #666;  left: 1em; top: 4em;"><i class="icon fa-angle-left fa-2x"></i></a>
+
+        <form method="post" action="{% url 'version_create' device_uuid=device_uuid %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <center>
+                <input type="text" id="name" name="name" title="name" placeholder="File tag-name" required autofocus
+                       oninvalid="this.setCustomValidity('This field should not be left blank')"
+                       oninput="setCustomValidity('')" style="width:55%">
+                <br>
+
+
             <input type="file" name="file" id="file" title="file">
-        </center><br>
-        <div class="row uniform">
-            <div class="12u">
-                <ul class="actions align-center">
-                    <li><input class="button" type="submit" value="Create" /></li>
-                </ul>
+
+
+            </center><br>
+
+            <div class="row uniform">
+                <div class="12u">
+                    <ul class="actions align-center">
+                        <li><input class="button" type="submit" value="Create" /></li>
+                    </ul>
+                </div>
             </div>
-        </div>
-    </form>
+
+            {%  if errors %}
+                <br>
+            {%  endif %}
+
+            <div>
+                 {% for field, errors in errors.items %}
+                     {% for error in errors %}
+                         <b style="color:red"> {{ error.message }} </b>
+                         </br>
+                     {% endfor %}
+                 {% endfor %}
+            </div>
+
+        </form>
+
+    </section>
+
 {% endblock %}

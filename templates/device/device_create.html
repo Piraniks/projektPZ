@@ -13,14 +13,18 @@
             <hr />
         </header>
 
-        <a href="{% url 'device_list' %}" style="color: #666; position: fixed; left: 1em; top: 4em; border:0;"><i class="icon fa-angle-left fa-2x"></i></a>
+        <a href="{% url 'device_list' %}" style="color: #666; position: fixed; left: 1em; top: 4em;"><i class="icon fa-angle-left fa-2x"></i></a>
 
         <form method="post" action="{% url 'device_create' %}" >
             {% csrf_token %}
             <center>
                 <input type="text" id="name" name="name" title="name" placeholder="Device name" required autofocus
                        oninvalid="this.setCustomValidity('This field should not be left blank')"
-                       oninput="setCustomValidity('')" style="width: 55%">
+                       oninput="setCustomValidity('')" style="width: 65%"><br>
+
+                <input type="text" id="ip_address" name="ip_address" title="ip_address" placeholder="Device IP address" required autofocus
+                       oninvalid="this.setCustomValidity('This field should not be left blank')"
+                       oninput="setCustomValidity('')" style="width: 65%">
             </center><br>
 
             <div class="row uniform">
@@ -32,6 +36,18 @@
                     </ul>
                 </div>
             </div>
+
+
+
+            <div>
+                 {% for field, errors in errors.items %}
+                     {% for error in errors %}
+                         <b style="color:red"> {{ error.message }} </b>
+                         </br>
+                     {% endfor %}
+                 {% endfor %}
+            </div>
+
         </form>
 
     </section>

@@ -15,26 +15,49 @@
 
         <form method="post">
 
-            <a href="{% url 'device_list' %}" style="position: fixed; color: #666;  left: 1em; top: 4em; border:0;"><i class="icon fa-angle-left fa-2x"></i></a>
+            <a href="{% url 'device_list' %}" style="position: fixed; color: #666;  left: 1em; top: 4em;"><i class="icon fa-angle-left fa-2x"></i></a>
 
             {% csrf_token %}
 
-            {{ device.uuid }}
-            <br/><br/>
+            <div style="text-align: center; display: inline-block;">
+                <div style="float: left; white-space: nowrap; text-align: left; margin-right: 10px;">
+                    <b> UUID: </b> <br/>
+                    <b> IP address: </b>
+                </div>
+                <div style="float: left; text-align: left;">
+                    {{ device.uuid }} <br/>
+                    {{ device.ip_address }}
+                </div>
+            </div><br><br>
 
             <center>
-                <div style="width: 55%;">
+                <div style="width: 65%;">
                     <input type="text" value="{{ device.name }}" title="name" id="name" name="name" autofocus required oninvalid="this.setCustomValidity('This field should not be left blank')"
                        oninput="setCustomValidity('')"><br>
                 </div>
             </center>
 
-{#            <center>#}
-{#                <div class="6u 12u(narrower)" style="margin-bottom: 1em;">#}
-{#                    <input type="checkbox" {% if device.is_standalone %} checked{% endif %} title="is_standalone" id="is_standalone" name="is_standalone">#}
-{#                    <label for="is_standalone">Standalone</label>#}
-{#                </div>#}
-{#            </center>#}
+            <div>
+                 {% for field, errors in errors.items %}
+                     {% for error in errors %}
+                         <b style="color:red"> {{ error.message }} </b>
+                         </br>
+                     {% endfor %}
+                 {% endfor %}
+            </div>
+
+            {%  if errors %}
+                <br>
+            {%  endif %}
+
+            <center>
+                <div class="6u 12u(narrower)" style="margin-bottom: 1em;">
+                    <input type="checkbox" {% if device.is_active %} checked{% endif %} title="is_active" id="is_active" name="is_active">
+                    <label for="is_active">Active</label>
+                </div>
+            </center>
+
+            <a href="{% url 'version_list' device_uuid=device.uuid %}">Version list</a><br><br>
 
             <div class="row uniform">
                 <div class="12u">
@@ -45,7 +68,7 @@
             </div><br/>
 
             <div style="text-align: center; display: inline-block;">
-                <div style="float: left; white-space: nowrap; text-align: left; margin-right: 10px;">
+                <div style="float: left; text-align: left; margin-right: 5em;">
                     <b> Creation date: </b> <br/>
                     <b> Modification date: </b>
                 </div>
