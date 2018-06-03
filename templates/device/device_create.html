@@ -22,7 +22,7 @@
                        oninvalid="this.setCustomValidity('This field should not be left blank')"
                        oninput="setCustomValidity('')" style="width: 65%"><br>
 
-                <input type="text" id="ip_address" name="ip_address" title="ip_address" placeholder="Device IP address" required autofocus
+                <input type="text" id="ip_address" name="ip_address" title="ip_address" placeholder="Device IP address" required
                        oninvalid="this.setCustomValidity('This field should not be left blank')"
                        oninput="setCustomValidity('')" style="width: 65%">
             </center><br>
@@ -37,16 +37,16 @@
                 </div>
             </div>
 
-
-
-            <div>
-                 {% for field, errors in errors.items %}
-                     {% for error in errors %}
-                         <b style="color:red"> {{ error.message }} </b>
-                         </br>
+            {%  if errors %}
+                <div>
+                     {% for field, errors in errors.items %}
+                         {% for error in errors %}
+                             <b style="color:red"> {{ error.message }} </b>
+                             <br>
+                         {% endfor %}
                      {% endfor %}
-                 {% endfor %}
-            </div>
+                </div>
+            {%  endif %}
 
         </form>
 

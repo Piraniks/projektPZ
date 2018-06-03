@@ -52,16 +52,15 @@
 
                 {%  if errors %}
                     <br>
-                {%  endif %}
-
-                 <div>
-                     {% for field, errors in errors.items %}
-                         {% for error in errors %}
-                             <b style="color:red"> {{ error.message }} </b>
-                             </br>
+                     <div>
+                         {% for field, errors in errors.items %}
+                             {% for error in errors %}
+                                 <b style="color:red"> {{ error.message }} </b>
+                                 </br>
+                             {% endfor %}
                          {% endfor %}
-                     {% endfor %}
-                </div>
+                    </div>
+                {%  endif %}
 
             </form>
         </div>

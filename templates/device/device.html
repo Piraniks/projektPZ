@@ -37,25 +37,17 @@
                 </div>
             </center>
 
-            <div>
-                 {% for field, errors in errors.items %}
-                     {% for error in errors %}
-                         <b style="color:red"> {{ error.message }} </b>
-                         </br>
+            {% if errors %}
+                <div>
+                     {% for field, errors in errors.items %}
+                         {% for error in errors %}
+                             <b style="color:red"> {{ error.message }} </b>
+                             </br>
+                         {% endfor %}
                      {% endfor %}
-                 {% endfor %}
-            </div>
-
-            {%  if errors %}
-                <br>
-            {%  endif %}
-
-            <center>
-                <div class="6u 12u(narrower)" style="margin-bottom: 1em;">
-                    <input type="checkbox" {% if device.is_active %} checked{% endif %} title="is_active" id="is_active" name="is_active">
-                    <label for="is_active">Active</label>
                 </div>
-            </center>
+                <br>
+            {% endif %}
 
             <a href="{% url 'version_list' device_uuid=device.uuid %}">Version list</a><br><br>
 
@@ -79,6 +71,11 @@
                 </div>
             </div>
 
+        </form>
+
+        <form method="post" action="{% url 'device_delete' device_uuid=device.uuid %}">
+            {% csrf_token %}
+            <button type="submit" class="button icon fa-trash" style="font-size: 0.95em; background-color: #ff4747;">Delete device</button>
         </form>
 
     </section>
