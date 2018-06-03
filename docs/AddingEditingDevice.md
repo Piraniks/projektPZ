@@ -27,8 +27,7 @@ dodania, która jest równa dacie ostatniej edycji. Generowany jest również UU
 urządzenia następuje przekierowanie na listę urządzeń użytkownika.
 
 ## Edycja urządzenia
-Na stronie edycji urządzenia znajduje się formularz edycji nazwy urządzenia oraz 
-. Na stronie listowane są informacje o edytowanym urządzeniu - jego UUID, adres IP, data ostatniej
+Na stronie edycji urządzenia znajduje się formularz edycji nazwy urządzenia. Na stronie listowane są informacje o edytowanym urządzeniu - jego UUID, adres IP, data ostatniej
 edycji oraz data dodania. Po zatwierdzeniu edycji data edycji za pomocą przycisku 'Save changes' 
 zostanie nadpisana aktualnymi danymi. Na stronie znajduje się również odnośnik do listy wersji
 edytowanego urządzenia - 'Version list'. Na stronie znajduje się również 
