@@ -174,6 +174,6 @@ class VersionListView(DevicePermissionMixin, LoginRequiredMixin, View):
                                          content_type=device_content_type)
         context = {
             'versions': devices,
-            'device_uuid': device.uuid
+            'device': device
         }
         return render(request, self.TEMPLATE, context=context)
