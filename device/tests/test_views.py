@@ -225,18 +225,40 @@ class DeviceTestCase(TransactionTestCase):
     def test_delete_device(self):
         self.client.force_login(self.device_owner)
 
-        request_data = {
-            'name': self.device.name
-        }
         response = self.client.post(
-            reverse('device', kwargs={'device_uuid': self.device.uuid}),
-            request_data
+            reverse('device_delete', kwargs={'device_uuid': self.device.uuid})
         )
 
         updated_device = Device.objects.get(pk=self.device.pk)
 
         self.assertFalse(updated_device.is_active)
         self.assertRedirects(response, reverse('device_list'))
+
+    def test_delete_not_existing_device(self):
+        not_existing_device_uuid = uuid4()
+        self.client.force_login(self.device_owner)
+
+        response = self.client.post(
+            reverse('device_delete', kwargs={'device_uuid': not_existing_device_uuid})
+        )
+
+        device = Device.objects.get(pk=self.device.pk)
+
+        self.assertTrue(device.is_active)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_delete_not_owned_device(self):
+        not_owner = User.objects.create_user(username='not_owner', password='password')
+        self.client.force_login(not_owner)
+
+        response = self.client.post(
+            reverse('device_delete', kwargs={'device_uuid': self.device.uuid})
+        )
+
+        device = Device.objects.get(pk=self.device.pk)
+
+        self.assertTrue(device.is_active)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
 class VersionTestCase(TransactionTestCase):
