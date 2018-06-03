@@ -37,13 +37,9 @@ class DeviceView(DevicePermissionMixin, LoginRequiredMixin, View):
 
         if device_form.is_valid():
             device.name = device_form.cleaned_data.get('name', device.name)
-            device.is_active = device_form.cleaned_data.get('is_active')
             device.save()
 
-            if device.is_active:
-                return render(request, self.TEMPLATE, context={'device': device})
-            else:
-                return redirect('device_list')
+            return render(request, self.TEMPLATE, context={'device': device})
 
         else:
             context = {
@@ -85,6 +81,20 @@ class DeviceCreateView(LoginRequiredMixin, View):
                 'errors': json.loads(device_form.errors.as_json())
             }
             return render(request, self.TEMPLATE, context=context, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DeviceDeleteView(DevicePermissionMixin, LoginRequiredMixin, View):
+    def post(self, request, device_uuid):
+        response = self.validate_user_for_device(request=request,
+                                                 device_uuid=device_uuid)
+        if response is not None:
+            return response
+
+        device = Device.objects.get(uuid=device_uuid)
+        device.is_active = False
+        device.save()
+
+        return redirect('device_list')
 
 
 class VersionCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
