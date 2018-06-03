@@ -13,7 +13,7 @@ Na ww. podstronie znajduje się lista plików (wersji) przesłanych na urządzen
 Ciąg znaków pod nazwą każdego z przesłanych plików to wygenerowany universally unique identifier (UUID). Na liście można sprawdzić również kto i kiedy
 przesłał dany plik na urządzenie. Pod listą
 przesłanych plików znajduje się przycisk 'Add new version' będący odnośnikiem do strony przesyłania urządzenia.
-Jeżeli użytkownik nie przekazał jeszcze żadnego pliku do danego urządzenia, na stronie z listą zamiast ww. informacji znajduje się powiadomienie "Whoops! You have no devices added yet" i przycisk będący odnośnikiem do strony przesyłania plików.
+Jeżeli użytkownik nie przekazał jeszcze żadnego pliku do danego urządzenia, na stronie z listą zamiast ww. informacji znajduje się powiadomienie "Whoops! You have no versions added yet" i przycisk będący odnośnikiem do strony przesyłania plików.
 
 ## Przesyłanie pliku (wersji)
 Do podstrony można przejść za pomocą przycisku 'Add new version' znajdującego się na stronie listy 
