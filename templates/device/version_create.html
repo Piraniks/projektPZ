@@ -15,11 +15,13 @@
             <center>
                 <input type="text" id="name" name="name" title="name" placeholder="File tag-name" required autofocus
                        oninvalid="this.setCustomValidity('This field should not be left blank')"
-                       oninput="setCustomValidity('')" style="width:55%">
+                       oninput="setCustomValidity('')" style="width:65%">
                 <br>
 
 
-            <input type="file" name="file" id="file" title="file">
+            <input type="file" name="file" id="file" title="file" required
+                       oninvalid="this.setCustomValidity('You must choose a file')"
+                       oninput="setCustomValidity('')" style="width:55%">
 
 
             </center><br>
