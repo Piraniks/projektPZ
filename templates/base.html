@@ -49,15 +49,7 @@
             {% block content %}
             {% endblock %}
 
-        <div style="color:red">
-             {% for field, errors in errors.items %}
-                 {% for error in errors %}
-                    {{ error.message }}
-                     </br>
-                 {% endfor %}
-             {% endfor %}
-        </div>
-        </div>
+
 
         {% include "footer.html" %}
     </div>

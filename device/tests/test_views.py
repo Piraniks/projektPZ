@@ -202,26 +202,6 @@ class DeviceTestCase(TransactionTestCase):
         self.assertEqual(updated_device.ip_address, self.device.ip_address)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_edit_ip_addess_with_empty_ip_address(self):
-        new_ip_address = ''
-
-        self.client.force_login(self.device_owner)
-
-        request_data = {
-            'name': self.device.name,
-            'ip_address': new_ip_address,
-            'is_active': True
-        }
-        response = self.client.post(
-            reverse('device', kwargs={'device_uuid': self.device.uuid}),
-            request_data
-        )
-
-        updated_device = Device.objects.get(pk=self.device.pk)
-
-        self.assertEqual(updated_device.ip_address, self.device.ip_address)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
     def test_edit_as_owner_with_valid_name(self):
         new_name = 'new_name'
 
@@ -243,24 +223,42 @@ class DeviceTestCase(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_delete_device(self):
-        is_active = False
-
         self.client.force_login(self.device_owner)
 
-        request_data = {
-            'is_active': is_active,
-            'name': self.device.name,
-            'ip_address': self.device.ip_address,
-        }
         response = self.client.post(
-            reverse('device', kwargs={'device_uuid': self.device.uuid}),
-            request_data
+            reverse('device_delete', kwargs={'device_uuid': self.device.uuid})
         )
 
         updated_device = Device.objects.get(pk=self.device.pk)
 
         self.assertFalse(updated_device.is_active)
         self.assertRedirects(response, reverse('device_list'))
+
+    def test_delete_not_existing_device(self):
+        not_existing_device_uuid = uuid4()
+        self.client.force_login(self.device_owner)
+
+        response = self.client.post(
+            reverse('device_delete', kwargs={'device_uuid': not_existing_device_uuid})
+        )
+
+        device = Device.objects.get(pk=self.device.pk)
+
+        self.assertTrue(device.is_active)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_delete_not_owned_device(self):
+        not_owner = User.objects.create_user(username='not_owner', password='password')
+        self.client.force_login(not_owner)
+
+        response = self.client.post(
+            reverse('device_delete', kwargs={'device_uuid': self.device.uuid})
+        )
+
+        device = Device.objects.get(pk=self.device.pk)
+
+        self.assertTrue(device.is_active)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
 class VersionTestCase(TransactionTestCase):
@@ -414,7 +412,7 @@ class CreateVersionTestCase(TransactionTestCase):
         version_created = Version.objects.filter(name=version_name).first()
 
         self.assertRedirects(response,
-                             reverse('device',
+                             reverse('version_list',
                                      kwargs={'device_uuid': self.device.uuid})
                              )
         self.assertIsNotNone(version_created)
@@ -442,7 +440,7 @@ class CreateVersionTestCase(TransactionTestCase):
         old_version = Version.objects.get(name=old_version_name)
 
         self.assertRedirects(response,
-                             reverse('device',
+                             reverse('version_list',
                                      kwargs={'device_uuid': self.device.uuid})
                              )
         self.assertNotEqual(new_version.uuid, old_version.uuid)

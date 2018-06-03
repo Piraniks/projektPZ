@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
@@ -8,7 +10,7 @@ from django.utils import timezone
 from projektPZ import status
 
 from device.models import Device, Version
-from device.forms import DeviceForm, VersionForm
+from device.forms import DeviceForm, VersionForm, DeviceEditForm
 from device.mixins import DevicePermissionMixin
 
 
@@ -31,22 +33,18 @@ class DeviceView(DevicePermissionMixin, LoginRequiredMixin, View):
             return response
 
         device = Device.objects.get(uuid=device_uuid)
-        device_form = DeviceForm(request.POST)
+        device_form = DeviceEditForm(request.POST)
 
         if device_form.is_valid():
             device.name = device_form.cleaned_data.get('name', device.name)
-            device.is_active = device_form.cleaned_data.get('is_active')
             device.save()
 
-            if device.is_active:
-                return render(request, self.TEMPLATE, context={'device': device})
-            else:
-                return redirect('device_list')
+            return render(request, self.TEMPLATE, context={'device': device})
 
         else:
             context = {
                 'device': device,
-                'errors': device_form.errors.as_json()
+                'errors': json.loads(device_form.errors.as_json())
             }
             return render(request, self.TEMPLATE, context=context, status=status.HTTP_400_BAD_REQUEST)
 
@@ -80,9 +78,23 @@ class DeviceCreateView(LoginRequiredMixin, View):
             return redirect('device_list')
         else:
             context = {
-                'errors': device_form.errors.as_json()
+                'errors': json.loads(device_form.errors.as_json())
             }
             return render(request, self.TEMPLATE, context=context, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DeviceDeleteView(DevicePermissionMixin, LoginRequiredMixin, View):
+    def post(self, request, device_uuid):
+        response = self.validate_user_for_device(request=request,
+                                                 device_uuid=device_uuid)
+        if response is not None:
+            return response
+
+        device = Device.objects.get(uuid=device_uuid)
+        device.is_active = False
+        device.save()
+
+        return redirect('device_list')
 
 
 class VersionCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
@@ -110,7 +122,7 @@ class VersionCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
 
         if version_form.is_valid() is False:
             context = {
-                'errors': version_form.errors.as_json(),
+                'errors': json.loads(version_form.errors.as_json()),
                 'device_uuid': device.uuid
             }
 
@@ -153,7 +165,7 @@ class VersionCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
             }
             return render(request, self.TEMPLATE, context=context)
 
-        return redirect('device', device_uuid=device.uuid)
+        return redirect('version_list', device_uuid=device.uuid)
 
 
 class VersionListView(DevicePermissionMixin, LoginRequiredMixin, View):
@@ -170,4 +182,8 @@ class VersionListView(DevicePermissionMixin, LoginRequiredMixin, View):
         device_content_type = ContentType.objects.get_for_model(device)
         devices = Version.objects.filter(object_id=device.id,
                                          content_type=device_content_type)
-        return render(request, self.TEMPLATE, context={'versions': devices})
+        context = {
+            'versions': devices,
+            'device': device
+        }
+        return render(request, self.TEMPLATE, context=context)

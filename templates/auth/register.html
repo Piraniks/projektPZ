@@ -50,6 +50,18 @@
                     </div>
                 </div>
 
+                {%  if errors %}
+                    <br>
+                     <div>
+                         {% for field, errors in errors.items %}
+                             {% for error in errors %}
+                                 <b style="color:red"> {{ error.message }} </b>
+                                 </br>
+                             {% endfor %}
+                         {% endfor %}
+                    </div>
+                {%  endif %}
+
             </form>
         </div>
 
