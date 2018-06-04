@@ -55,9 +55,9 @@ class Device(models.Model):
     ip_address = models.GenericIPAddressField()
 
     last_updated = models.DateTimeField(null=True, blank=True)
-    version = models.ForeignKey(Version, on_delete=models.SET_NULL,
-                                related_name='devices',
-                                null=True, blank=True)
+    version = models.OneToOneField(Version, on_delete=models.SET_NULL,
+                                   related_name='devices',
+                                   null=True, blank=True)
 
     owner = models.ForeignKey(User, on_delete=models.SET_NULL,
                               related_name='devices', null=True)
@@ -100,7 +100,15 @@ class Device(models.Model):
 
 
 class DeviceGroup(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, unique=True)
     name = models.CharField(max_length=50)
+    is_active = models.BooleanField(default=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    last_edited = models.DateTimeField(auto_now=True)
+
+    last_updated = models.DateTimeField(null=True, blank=True)
+    version = models.OneToOneField(Version, on_delete=models.SET_NULL,
+                                   null=True, blank=True)
 
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     devices = models.ManyToManyField(Device, related_name='groups')
