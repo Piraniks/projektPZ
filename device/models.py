@@ -6,7 +6,8 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 
-from device.utils import checksum, uploaded_file_path, update_device
+from device.utils import (checksum, uploaded_file_path,
+                          update_device, update_device_group)
 
 
 User = get_user_model()
@@ -112,3 +113,7 @@ class DeviceGroup(models.Model):
 
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     devices = models.ManyToManyField(Device, related_name='groups')
+
+    def save(self, *args, **kwargs):
+        update_device_group(self.uuid)
+        return super().save(*args, **kwargs)
