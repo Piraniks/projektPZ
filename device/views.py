@@ -189,11 +189,11 @@ class VersionListView(DevicePermissionMixin, LoginRequiredMixin, View):
         return render(request, self.TEMPLATE, context=context)
 
 
-class DeviceGroupCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
+class DeviceGroupListView(DevicePermissionMixin, LoginRequiredMixin, View):
     pass
 
 
-class DeviceGroupListView(DevicePermissionMixin, LoginRequiredMixin, View):
+class DeviceGroupCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
     pass
 
 
@@ -202,6 +202,10 @@ class DeviceGroupView(DevicePermissionMixin, LoginRequiredMixin, View):
 
 
 class DeviceGroupAddDeviceView(DevicePermissionMixin, LoginRequiredMixin, View):
+    pass
+
+
+class DeviceGroupRemoveDeviceView(DevicePermissionMixin, LoginRequiredMixin, View):
     pass
 
 
