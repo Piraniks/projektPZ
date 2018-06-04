@@ -1,6 +1,6 @@
 from django import forms
 
-from device.models import Device, Version
+from device.models import Device, Version, DeviceGroup
 
 
 class DeviceForm(forms.ModelForm):
@@ -39,3 +39,9 @@ class VersionForm(forms.ModelForm):
     class Meta:
         model = Version
         exclude = ['id', 'versioned_object', 'object_id', 'content_type']
+
+
+class DeviceGroupForm(forms.ModelForm):
+    class Meta:
+        model = DeviceGroup
+        exclude = ['owner']

@@ -17,7 +17,8 @@ class Version(models.Model):
     name = models.CharField(max_length=50)
     timestamp = models.DateTimeField(auto_now_add=True)
 
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE,
+                                     null=True)
     object_id = models.PositiveIntegerField(null=True)
     versioned_object = GenericForeignKey('content_type', 'object_id')
 
@@ -26,8 +27,10 @@ class Version(models.Model):
 
     creator = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
-    previous = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='+')
-    next = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='+')
+    previous = models.ForeignKey('self', on_delete=models.SET_NULL,
+                                 null=True, blank=True, related_name='+')
+    next = models.ForeignKey('self', on_delete=models.SET_NULL,
+                             null=True, blank=True, related_name='+')
 
     class Meta:
         ordering = ['-id']
@@ -52,9 +55,12 @@ class Device(models.Model):
     ip_address = models.GenericIPAddressField()
 
     last_updated = models.DateTimeField(null=True, blank=True)
-    version = models.ForeignKey(Version, on_delete=models.SET_NULL, related_name='devices', null=True, blank=True)
+    version = models.ForeignKey(Version, on_delete=models.SET_NULL,
+                                related_name='devices',
+                                null=True, blank=True)
 
-    owner = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='devices', null=True)
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL,
+                              related_name='devices', null=True)
 
     class Meta:
         ordering = ['-id']
@@ -89,5 +95,12 @@ class Device(models.Model):
         return True
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
         update_device(self.ip_address)
+        return super().save(*args, **kwargs)
+
+
+class DeviceGroup(models.Model):
+    name = models.CharField(max_length=50)
+
+    owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    devices = models.ManyToManyField(Device, related_name='groups')
