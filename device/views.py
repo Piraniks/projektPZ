@@ -366,8 +366,7 @@ class DeviceGroupAvailableDeviceView(DeviceGroupsPermissionMixin,
             return response
 
         group = DeviceGroup.objects.get(uuid=group_uuid, is_active=True)
-        devices = Device.objects.exclude(groups__uuid=group.uuid,
-                                         is_active=False).filter(owner=group.owner)
+        devices = Device.objects.exclude(groups=group).exclude(is_active=False).filter(owner=group.owner)
 
         return render(request, self.TEMPLATE, context={'devices': devices})
 
