@@ -289,19 +289,19 @@ class DeviceGroupAddDeviceView(DeviceGroupsPermissionMixin,
                 'errors': json.loads(group_form.errors.as_json())
             }
 
-            return JsonResponse(data=data)
+            return JsonResponse(data=data, status=status.HTTP_400_BAD_REQUEST)
 
-        device_uuid = group_form.device_uuid
+        device_uuid = group_form.cleaned_data.get('device_uuid')
         response = self.validate_user_for_device(request=request,
                                                  device_uuid=device_uuid)
         if response is not None:
             return response
 
-        device = Device.objects.get(device_uuid=device_uuid, is_active=True)
-        if device not in group.devices:
+        device = Device.objects.get(uuid=device_uuid, is_active=True)
+        if device not in group.devices.all():
             group.devices.add(device)
 
-        redirect('group_details', group_uuid=group_uuid)
+        return redirect('group_details', group_uuid=group_uuid)
 
 
 class DeviceGroupRemoveDeviceView(DeviceGroupsPermissionMixin,
@@ -324,19 +324,19 @@ class DeviceGroupRemoveDeviceView(DeviceGroupsPermissionMixin,
                 'errors': json.loads(group_form.errors.as_json())
             }
 
-            return JsonResponse(data=data)
+            return JsonResponse(data=data, status=status.HTTP_400_BAD_REQUEST)
 
-        device_uuid = group_form.device_uuid
+        device_uuid = group_form.cleaned_data.get('device_uuid')
         response = self.validate_user_for_device(request=request,
                                                  device_uuid=device_uuid)
         if response is not None:
             return response
 
-        device = Device.objects.get(device_uuid=device_uuid, is_active=True)
-        if device in group.devices:
+        device = Device.objects.get(uuid=device_uuid, is_active=True)
+        if device in group.devices.all():
             group.devices.remove(device)
 
-        redirect('group_details', group_uuid=group_uuid)
+        return redirect('group_details', group_uuid=group_uuid)
 
 
 class DeviceGroupAddedDeviceView(DeviceGroupsPermissionMixin,
