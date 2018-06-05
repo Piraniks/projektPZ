@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    <section id="main" class="container 50%" style="min-height: 30em;">
+    <section id="main" class="container 50%">
 
         <header>
             <h2>Device details</h2>
@@ -15,47 +15,67 @@
 
         <form method="post">
 
-            <a href="{% url 'device_list' %}" style="position: fixed; color: #666;  left: 1em; top: 4em; border:0;"><i class="icon fa-angle-left fa-2x"></i></a>
+            <a href="{% url 'device_list' %}" class="arrow_back"><i class="icon fa-angle-left fa-2x"></i></a>
 
             {% csrf_token %}
 
-            {{ device.uuid }}
-            <br/><br/>
+            <div class="table">
+                <div class="column1">
+                    <b> UUID: </b> <br/>
+                    <b> IP address: </b>
+                </div>
+                <div class="column2">
+                    {{ device.uuid }} <br/>
+                    {{ device.ip_address }}
+                </div>
+            </div><br><br>
 
             <center>
-                <div style="width: 55%;">
-                    <input type="text" value="{{ device.name }}" title="name" id="name" name="name" autofocus required oninvalid="this.setCustomValidity('This field should not be left blank')"
+                <div class="input-width">
+                    <input type="text" value="{{ device.name }}" title="name" id="name" name="name" autofocus required
+                       oninvalid="this.setCustomValidity('This field should not be left blank')"
                        oninput="setCustomValidity('')"><br>
                 </div>
             </center>
 
-{#            <center>#}
-{#                <div class="6u 12u(narrower)" style="margin-bottom: 1em;">#}
-{#                    <input type="checkbox" {% if device.is_standalone %} checked{% endif %} title="is_standalone" id="is_standalone" name="is_standalone">#}
-{#                    <label for="is_standalone">Standalone</label>#}
-{#                </div>#}
-{#            </center>#}
+            {% if errors %}
+                <div>
+                     {% for field, errors in errors.items %}
+                         {% for error in errors %}
+                             <b class="error"> {{ error.message }} </b>
+                             <br>
+                         {% endfor %}
+                     {% endfor %}
+                </div>
+                <br>
+            {% endif %}
+
+            <a href="{% url 'version_list' device_uuid=device.uuid %}">Version list</a><br><br>
 
             <div class="row uniform">
                 <div class="12u">
                     <ul class="actions align-center">
-                        <li><button type="submit" class="button icon fa-save" style="font-size: 0.95em;">Save changes</button></li>
+                        <li><button type="submit" class="button font icon fa-save">Save changes</button></li>
                     </ul>
                 </div>
-            </div><br/>
+            </div><br>
 
-            <div style="text-align: center; display: inline-block;">
-                <div style="float: left; white-space: nowrap; text-align: left; margin-right: 10px;">
-                    <b> Creation date: </b> <br/>
+            <div class="table">
+                <div class="column1" style="margin-right: 5em;">
+                    <b> Creation date: </b> <br>
                     <b> Modification date: </b>
                 </div>
-                <div style="float: left; text-align: left;">
-                    {{ device.timestamp | date:'Y-m-d H:i:s' }} <br/>
+                <div class="column2">
+                    {{ device.timestamp | date:'Y-m-d H:i:s' }} <br>
                     {{ device.last_edited | date:'Y-m-d H:i:s' }}
-                    {# {{ device.last_updated | date:'Y-m-d H:i:s' }}<br> #}
                 </div>
             </div>
 
+        </form>
+
+        <form method="post" action="{% url 'device_delete' device_uuid=device.uuid %}">
+            {% csrf_token %}
+            <button type="submit" class="button error icon fa-trash" >Delete device</button>
         </form>
 
     </section>

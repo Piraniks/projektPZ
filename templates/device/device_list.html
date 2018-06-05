@@ -6,14 +6,14 @@
 
 {% block content %}
 
-    <section id="main" class="container 50%" style="min-height: 30em;">
+    <section id="main" class="container 50%">
 
         <header>
             <h2>Your devices</h2>
             <hr />
         </header>
 
-        <a href="{% url 'index' %}" style="color: #666; position: fixed; left: 1em; top: 4em; border:0;"><i class="icon fa-angle-left fa-2x"></i></a>
+        <a href="{% url 'index' %}" class="arrow_back"><i class="icon fa-angle-left fa-2x"></i></a>
 
         {% if devices %}
 
@@ -32,7 +32,7 @@
             <div class="12u">
                 <ul class="actions align-center">
                     <ul class="actions">
-                        <li><a href="{% url 'device_create' %}" class="button icon fa-plus" style="font-size: 1em;">Add new device</a></li>
+                        <li><br><a href="{% url 'device_create' %}" class="button font2 icon fa-plus">Add new device</a></li>
                     </ul>
                 </ul>
             </div>

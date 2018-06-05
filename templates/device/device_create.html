@@ -6,32 +6,50 @@
 
 {% block content %}
 
-    <section id="main" class="container 50%" style="min-height: 30em;">
+    <section id="main" class="container 50%">
 
         <header>
             <h2>Add new device</h2>
             <hr />
         </header>
 
-        <a href="{% url 'device_list' %}" style="color: #666; position: fixed; left: 1em; top: 4em; border:0;"><i class="icon fa-angle-left fa-2x"></i></a>
+        <a href="{% url 'device_list' %}" class="arrow_back"><i class="icon fa-angle-left fa-2x"></i></a>
 
         <form method="post" action="{% url 'device_create' %}" >
             {% csrf_token %}
             <center>
-                <input type="text" id="name" name="name" title="name" placeholder="Device name" required autofocus
-                       oninvalid="this.setCustomValidity('This field should not be left blank')"
-                       oninput="setCustomValidity('')" style="width: 55%">
+                <div class="input-width">
+                    <input type="text" id="name" name="name" title="name" placeholder="Device name" required autofocus
+                           oninvalid="this.setCustomValidity('This field should not be left blank')"
+                           oninput="setCustomValidity('')" ><br>
+
+                    <input type="text" id="ip_address" name="ip_address" title="ip_address" placeholder="Device IP address" required
+                           oninvalid="this.setCustomValidity('This field should not be left blank')"
+                           oninput="setCustomValidity('')">
+                </div>
             </center><br>
 
             <div class="row uniform">
                 <div class="12u">
                     <ul class="actions align-center">
                         <ul class="actions">
-                            <li><button type="submit" class="button icon fa-plus" style="font-size: 0.95em;">Add</button></li>
+                            <li><button type="submit" class="button font icon fa-plus">Add</button></li>
                         </ul>
                     </ul>
                 </div>
             </div>
+
+            {%  if errors %}
+                <div>
+                     {% for field, errors in errors.items %}
+                         {% for error in errors %}
+                             <b class="error"> {{ error.message }} </b>
+                             <br>
+                         {% endfor %}
+                     {% endfor %}
+                </div>
+            {%  endif %}
+
         </form>
 
     </section>
