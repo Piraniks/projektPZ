@@ -201,7 +201,7 @@ class DeviceGroupListView(LoginRequiredMixin, View):
                                             is_active=True).order_by('timestamp')
 
         context = {'groups': groups}
-        return render(request, self.TEMPLATE, content_type=context)
+        return render(request, self.TEMPLATE, context=context)
 
 
 class DeviceGroupCreateView(LoginRequiredMixin, View):
