@@ -82,17 +82,17 @@
 
         </form>
 
-        <form method="post" action="{% url 'group_added' group_uuid=group.uuid %}">
-            {% csrf_token %}
+        <form method="post" >
             <div class="">
-                <button type="submit" class="button">Show added to group</button>
+               <a href="{% url  'group_added' group_uuid=group.uuid %}" class="button">Show added to group</a>
+            {% csrf_token %}
             </div>
         </form>
 
-        <form method="post" action="{% url 'group_available' group_uuid=group.uuid %}">
-            {% csrf_token %}
+        <form method="post" >
             <div class="">
-                <button type="submit" class="button">Add to group</button>
+                <a href="{% url 'group_available' group_uuid=group.uuid %}" class="button icon fa-plus">Add to group </a>
+            {% csrf_token %}
             </div>
         </form>
 
