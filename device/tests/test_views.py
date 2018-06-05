@@ -77,7 +77,7 @@ class DeviceTestCase(TransactionTestCase):
 
     def test_allow_owner_to_see_device(self):
         self.client.force_login(self.device_owner)
-        response = self.client.get(reverse('device', kwargs={'device_uuid': self.device.uuid}))
+        response = self.client.get(reverse('device_details', kwargs={'device_uuid': self.device.uuid}))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
@@ -85,7 +85,7 @@ class DeviceTestCase(TransactionTestCase):
         not_owner = User.objects.create_user(username='not_owner', password='password')
 
         self.client.force_login(not_owner)
-        response = self.client.get(reverse('device', kwargs={'device_uuid': self.device.uuid}))
+        response = self.client.get(reverse('device_details', kwargs={'device_uuid': self.device.uuid}))
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -93,7 +93,7 @@ class DeviceTestCase(TransactionTestCase):
         not_existing_uuid = uuid4()
 
         self.client.force_login(self.device_owner)
-        response = self.client.get(reverse('device', kwargs={'device_uuid': not_existing_uuid}))
+        response = self.client.get(reverse('device_details', kwargs={'device_uuid': not_existing_uuid}))
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -103,7 +103,7 @@ class DeviceTestCase(TransactionTestCase):
         self.device.is_active = False
         self.device.save()
 
-        response = self.client.get(reverse('device', kwargs={'device_uuid': self.device.uuid}))
+        response = self.client.get(reverse('device_details', kwargs={'device_uuid': self.device.uuid}))
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -118,7 +118,7 @@ class DeviceTestCase(TransactionTestCase):
             'ip_address': self.device.ip_address
         }
         response = self.client.post(
-            reverse('device', kwargs={'device_uuid': not_existing_uuid}),
+            reverse('device_details', kwargs={'device_uuid': not_existing_uuid}),
             request_data
         )
 
@@ -135,7 +135,7 @@ class DeviceTestCase(TransactionTestCase):
             'ip_address': self.device.ip_address
         }
         response = self.client.post(
-            reverse('device', kwargs={'device_uuid': self.device.uuid}),
+            reverse('device_details', kwargs={'device_uuid': self.device.uuid}),
             request_data
         )
 
@@ -154,7 +154,7 @@ class DeviceTestCase(TransactionTestCase):
             'ip_address': self.device.ip_address
         }
         response = self.client.post(
-            reverse('device', kwargs={'device_uuid': self.device.uuid}),
+            reverse('device_details', kwargs={'device_uuid': self.device.uuid}),
             request_data
         )
 
@@ -173,7 +173,7 @@ class DeviceTestCase(TransactionTestCase):
             'ip_address': self.device.ip_address
         }
         response = self.client.post(
-            reverse('device', kwargs={'device_uuid': self.device.uuid}),
+            reverse('device_details', kwargs={'device_uuid': self.device.uuid}),
             request_data
         )
 
@@ -193,7 +193,7 @@ class DeviceTestCase(TransactionTestCase):
             'is_active': True
         }
         response = self.client.post(
-            reverse('device', kwargs={'device_uuid': self.device.uuid}),
+            reverse('device_details', kwargs={'device_uuid': self.device.uuid}),
             request_data
         )
 
@@ -213,7 +213,7 @@ class DeviceTestCase(TransactionTestCase):
             'is_active': True
         }
         response = self.client.post(
-            reverse('device', kwargs={'device_uuid': self.device.uuid}),
+            reverse('device_details', kwargs={'device_uuid': self.device.uuid}),
             request_data
         )
 
