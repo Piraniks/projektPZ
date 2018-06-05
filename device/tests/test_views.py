@@ -732,20 +732,188 @@ class DeviceGroupRemoveDeviceTestCase(TransactionTestCase):
         self.device_group = DeviceGroup.objects.create(name='device_group',
                                                        owner=self.owner)
 
-    def test_get_group_details_as_owner(self):
+        self.device_group.devices.add(self.device)
+        self.device_group.save()
+
+    def test_remove_device_as_owner(self):
         self.client.force_login(self.owner)
-        response = self.client.get(
-            reverse('group_added', kwargs={'group_uuid': self.device_group.uuid})
+        response = self.client.post(
+            reverse('group_remove', kwargs={'group_uuid': self.device_group.uuid}),
+            data={'device_uuid': self.device.uuid}
         )
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        device = Device.objects.filter(groups__uuid=self.device_group.uuid).first()
 
-    def test_get_group_details_for_not_existing_group(self):
+        self.assertRedirects(response,
+                             reverse('group_details',
+                                     kwargs={'group_uuid': self.device_group.uuid})
+                             )
+        self.assertIsNone(device)
+
+    def test_remove_device_not_as_owner(self):
+        not_owner = User.objects.create_user(username='user', password='password')
+
+        self.client.force_login(not_owner)
+        response = self.client.post(
+            reverse('group_remove', kwargs={'group_uuid': self.device_group.uuid}),
+            data={'device_uuid': self.device.uuid}
+        )
+
+        device = Device.objects.filter(groups__uuid=self.device_group.uuid).first()
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertIsNotNone(device)
+
+    def test_remove_device_for_not_existing_group(self):
         new_uuid = uuid4()
 
         self.client.force_login(self.owner)
-        response = self.client.get(
-            reverse('group_added', kwargs={'group_uuid': new_uuid})
+        response = self.client.post(
+            reverse('group_remove', kwargs={'group_uuid': new_uuid}),
+            data={'device_uuid': self.device.uuid}
         )
 
+        device = Device.objects.filter(groups__uuid=self.device_group.uuid).first()
+
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertIsNotNone(device)
+
+    def test_add_not_existing_device(self):
+        new_uuid = uuid4()
+
+        self.client.force_login(self.owner)
+        response = self.client.post(
+            reverse('group_remove', kwargs={'group_uuid': self.device_group.uuid}),
+            data={'device_uuid': new_uuid}
+        )
+
+        device = Device.objects.filter(groups__uuid=self.device_group.uuid).first()
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertIsNotNone(device)
+
+    def test_add_not_owned_device(self):
+        not_owner = User.objects.create_user(username='user', password='password')
+        not_owned_device = Device.objects.create(name='not_owned',
+                                                 owner=not_owner,
+                                                 ip_address='192.168.1.1')
+
+        self.client.force_login(self.owner)
+        response = self.client.post(
+            reverse('group_remove', kwargs={'group_uuid': self.device_group.uuid}),
+            data={'device_uuid': not_owned_device.uuid}
+        )
+
+        device = Device.objects.filter(groups__uuid=self.device_group.uuid).first()
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertIsNotNone(device)
+
+    def test_add_with_invalid_form_data(self):
+        self.client.force_login(self.owner)
+        response = self.client.post(
+            reverse('group_remove', kwargs={'group_uuid': self.device_group.uuid})
+        )
+
+        device = Device.objects.filter(groups__uuid=self.device_group.uuid).first()
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIsNotNone(device)
+
+
+class DeviceGroupAddDeviceTestCase(TransactionTestCase):
+    def setUp(self):
+        self.owner = User.objects.create_user(username='owner',
+                                              password='password')
+
+        self.device = Device.objects.create(name='device',
+                                            owner=self.owner,
+                                            ip_address='192.168.1.1')
+
+        self.device_group = DeviceGroup.objects.create(name='device_group',
+                                                       owner=self.owner)
+
+    def test_add_device_as_owner(self):
+        self.client.force_login(self.owner)
+        response = self.client.post(
+            reverse('group_add', kwargs={'group_uuid': self.device_group.uuid}),
+            data={'device_uuid': self.device.uuid}
+        )
+
+        device = Device.objects.filter(groups__uuid=self.device_group.uuid).first()
+
+        self.assertRedirects(response,
+                             reverse('group_details',
+                                     kwargs={'group_uuid': self.device_group.uuid})
+                             )
+        self.assertIsNotNone(device)
+
+    def test_remove_device_not_as_owner(self):
+        not_owner = User.objects.create_user(username='user', password='password')
+
+        self.client.force_login(not_owner)
+        response = self.client.post(
+            reverse('group_add', kwargs={'group_uuid': self.device_group.uuid}),
+            data={'device_uuid': self.device.uuid}
+        )
+
+        device = Device.objects.filter(groups__uuid=self.device_group.uuid).first()
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertIsNone(device)
+
+    def test_remove_device_for_not_existing_group(self):
+        new_uuid = uuid4()
+
+        self.client.force_login(self.owner)
+        response = self.client.post(
+            reverse('group_add', kwargs={'group_uuid': new_uuid}),
+            data={'device_uuid': self.device.uuid}
+        )
+
+        device = Device.objects.filter(groups__uuid=self.device_group.uuid).first()
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertIsNone(device)
+
+    def test_add_not_existing_device(self):
+        new_uuid = uuid4()
+
+        self.client.force_login(self.owner)
+        response = self.client.post(
+            reverse('group_add', kwargs={'group_uuid': self.device_group.uuid}),
+            data={'device_uuid': new_uuid}
+        )
+
+        device = Device.objects.filter(groups__uuid=self.device_group.uuid).first()
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertIsNone(device)
+
+    def test_add_not_owned_device(self):
+        not_owner = User.objects.create_user(username='user', password='password')
+        not_owned_device = Device.objects.create(name='not_owned',
+                                                 owner=not_owner,
+                                                 ip_address='192.168.1.1')
+
+        self.client.force_login(self.owner)
+        response = self.client.post(
+            reverse('group_add', kwargs={'group_uuid': self.device_group.uuid}),
+            data={'device_uuid': not_owned_device.uuid}
+        )
+
+        device = Device.objects.filter(groups__uuid=self.device_group.uuid).first()
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertIsNone(device)
+
+    def test_add_with_invalid_form_data(self):
+        self.client.force_login(self.owner)
+        response = self.client.post(
+            reverse('group_add', kwargs={'group_uuid': self.device_group.uuid})
+        )
+
+        device = Device.objects.filter(groups__uuid=self.device_group.uuid).first()
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIsNone(device)
