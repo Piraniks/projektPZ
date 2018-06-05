@@ -18,7 +18,7 @@
         {% if devices %}
 
             {% for device in devices %}
-                <a href="{% url 'device' device_uuid=device.uuid %}">{{ device.name }}</a><br>
+                <a href="{% url 'device_details' device_uuid=device.uuid %}">{{ device.name }}</a><br>
                 {{ device.uuid }}<br><br>
             {% endfor %}
 

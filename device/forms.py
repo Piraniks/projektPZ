@@ -42,6 +42,16 @@ class VersionForm(forms.ModelForm):
 
 
 class DeviceGroupForm(forms.ModelForm):
+    uuid = forms.UUIDField(disabled=True, required=False)
+    last_updated = forms.DateTimeField(disabled=True, required=False)
+
+    version = forms.IntegerField(disabled=True, min_value=0, required=False)
+    owner = forms.IntegerField(disabled=True, min_value=0, required=False)
+
     class Meta:
         model = DeviceGroup
-        exclude = ['owner']
+        exclude = ['id']
+
+
+class DeviceGroupDeviceForm(forms.Form):
+    device_uuid = forms.UUIDField()

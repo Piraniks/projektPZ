@@ -1,24 +1,26 @@
 from django.urls import path
 
 from device.views import (
-    DeviceView, DeviceListView, DeviceCreateView, DeviceDeleteView,
+    DeviceDetailsView, DeviceListView, DeviceCreateView, DeviceDeleteView,
     VersionCreateView, VersionListView,
     DeviceGroupCreateView, DeviceGroupDeleteView,
     DeviceGroupAddDeviceView, DeviceGroupRemoveDeviceView,
-    DeviceGroupListView, DeviceGroupView
+    DeviceGroupListView, DeviceGroupDetailsView
 )
 
 
 urlpatterns = [
     path('devices/', DeviceListView.as_view(), name='device_list'),
     path('devices/create/', DeviceCreateView.as_view(), name='device_create'),
-    path('devices/<uuid:device_uuid>/', DeviceView.as_view(), name='device'),
+    path('devices/<uuid:device_uuid>/',
+         DeviceDetailsView.as_view(), name='device_details'),
     path('devices/<uuid:device_uuid>/delete/',
          DeviceDeleteView.as_view(), name='device_delete'),
 
     path('groups/', DeviceGroupListView.as_view(), name='group_list'),
     path('groups/create/', DeviceGroupCreateView.as_view(), name='group_create'),
-    path('groups/<uuid:group_uuid>/', DeviceGroupView.as_view(), name='group'),
+    path('groups/<uuid:group_uuid>/',
+         DeviceGroupDetailsView.as_view(), name='group_details'),
     path('groups/<uuid:group_uuid>/delete/',
          DeviceGroupDeleteView.as_view(), name='group_delete'),
     path('groups/<uuid:group_uuid>/add/',
