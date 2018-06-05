@@ -283,6 +283,7 @@ class DeviceGroupAddDeviceView(DeviceGroupsPermissionMixin,
 
         group_form = DeviceGroupDeviceForm(request.POST)
 
+        # If anyone used the endpoint directly
         if group_form.is_valid() is False:
             data = {
                 'errors': json.loads(group_form.errors.as_json())
@@ -317,6 +318,7 @@ class DeviceGroupRemoveDeviceView(DeviceGroupsPermissionMixin,
 
         group_form = DeviceGroupDeviceForm(request.POST)
 
+        # If anyone used the endpoint directly
         if group_form.is_valid() is False:
             data = {
                 'errors': json.loads(group_form.errors.as_json())
@@ -337,7 +339,41 @@ class DeviceGroupRemoveDeviceView(DeviceGroupsPermissionMixin,
         redirect('group_details', group_uuid=group_uuid)
 
 
-class DeviceGroupDeleteView(DeviceGroupsPermissionMixin, LoginRequiredMixin, View):
+class DeviceGroupAddedDeviceView(DeviceGroupsPermissionMixin,
+                                 LoginRequiredMixin, View):
+    TEMPLATE = 'device/group_added_devices.html'
+
+    def get(self, request, group_uuid):
+        response = self.validate_user_for_group(request=request,
+                                                group_uuid=group_uuid)
+        if response is not None:
+            return response
+
+        group = DeviceGroup.objects.get(uuid=group_uuid, is_active=True)
+        devices = group.devices.exclude(is_active=False)
+
+        return render(request, self.TEMPLATE, context={'devices': devices})
+
+
+class DeviceGroupAvailableDeviceView(DeviceGroupsPermissionMixin,
+                                     LoginRequiredMixin, View):
+    TEMPLATE = 'device/group_available_devices.html'
+
+    def get(self, request, group_uuid):
+        response = self.validate_user_for_group(request=request,
+                                                group_uuid=group_uuid)
+        if response is not None:
+            return response
+
+        group = DeviceGroup.objects.get(uuid=group_uuid, is_active=True)
+        devices = Device.objects.exclude(groups__uuid=group.uuid,
+                                         is_active=False).filter(owner=group.owner)
+
+        return render(request, self.TEMPLATE, context={'devices': devices})
+
+
+class DeviceGroupDeleteView(DeviceGroupsPermissionMixin,
+                            LoginRequiredMixin, View):
 
     def post(self, request, group_uuid):
         response = self.validate_user_for_group(request=request,
@@ -345,7 +381,7 @@ class DeviceGroupDeleteView(DeviceGroupsPermissionMixin, LoginRequiredMixin, Vie
         if response is not None:
             return response
 
-        group = Device.objects.get(uuid=group_uuid, is_active=True)
+        group = DeviceGroup.objects.get(uuid=group_uuid, is_active=True)
         group.is_active = False
         group.save()
 
