@@ -25,7 +25,7 @@ class DeviceDetailsView(DevicePermissionMixin, LoginRequiredMixin, View):
         if response is not None:
             return response
 
-        device = Device.objects.get(uuid=device_uuid)
+        device = Device.objects.get(uuid=device_uuid, is_active=True)
         return render(request, self.TEMPLATE, context={'device': device})
 
     def post(self, request, device_uuid):
@@ -34,7 +34,7 @@ class DeviceDetailsView(DevicePermissionMixin, LoginRequiredMixin, View):
         if response is not None:
             return response
 
-        device = Device.objects.get(uuid=device_uuid)
+        device = Device.objects.get(uuid=device_uuid, is_active=True)
         device_form = DeviceEditForm(request.POST)
 
         if device_form.is_valid():
@@ -94,7 +94,7 @@ class DeviceDeleteView(DevicePermissionMixin, LoginRequiredMixin, View):
         if response is not None:
             return response
 
-        device = Device.objects.get(uuid=device_uuid)
+        device = Device.objects.get(uuid=device_uuid, is_active=True)
         device.is_active = False
         device.save()
 
@@ -121,7 +121,7 @@ class VersionCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
         if response is not None:
             return response
 
-        device = Device.objects.get(uuid=device_uuid)
+        device = Device.objects.get(uuid=device_uuid, is_active=True)
         version_form = VersionForm(data=request.POST, files=request.FILES)
 
         if version_form.is_valid() is False:
@@ -181,7 +181,7 @@ class VersionListView(DevicePermissionMixin, LoginRequiredMixin, View):
         if response is not None:
             return response
 
-        device = Device.objects.get(uuid=device_uuid)
+        device = Device.objects.get(uuid=device_uuid, is_active=True)
 
         device_content_type = ContentType.objects.get_for_model(device)
         devices = Version.objects.filter(object_id=device.id,
@@ -197,7 +197,8 @@ class DeviceGroupListView(LoginRequiredMixin, View):
     TEMPLATE = 'device/group_list.html'
 
     def get(self, request):
-        groups = DeviceGroup.objects.filter(user=request.user)
+        groups = DeviceGroup.objects.filter(owner=request.user,
+                                            is_active=True).order_by('timestamp')
 
         context = {'groups': groups}
         return render(request, self.TEMPLATE, content_type=context)
@@ -238,7 +239,7 @@ class DeviceGroupDetailsView(DeviceGroupsPermissionMixin, LoginRequiredMixin, Vi
         if response is not None:
             return response
 
-        group = DeviceGroup.objects.get(uuid=group_uuid)
+        group = DeviceGroup.objects.get(uuid=group_uuid, is_active=True)
 
         context = {'group': group}
         return render(request, self.TEMPLATE, context=context)
@@ -249,7 +250,7 @@ class DeviceGroupDetailsView(DeviceGroupsPermissionMixin, LoginRequiredMixin, Vi
         if response is not None:
             return response
 
-        group = DeviceGroup.objects.get(uuid=group_uuid)
+        group = DeviceGroup.objects.get(uuid=group_uuid, is_active=True)
 
         group_form = DeviceGroupForm(request.POST)
 
@@ -278,7 +279,7 @@ class DeviceGroupAddDeviceView(DeviceGroupsPermissionMixin,
         if response is not None:
             return response
 
-        group = DeviceGroup.objects.get(uuid=group_uuid)
+        group = DeviceGroup.objects.get(uuid=group_uuid, is_active=True)
 
         group_form = DeviceGroupDeviceForm(request.POST)
 
@@ -295,7 +296,7 @@ class DeviceGroupAddDeviceView(DeviceGroupsPermissionMixin,
         if response is not None:
             return response
 
-        device = Device.objects.get(device_uuid=device_uuid)
+        device = Device.objects.get(device_uuid=device_uuid, is_active=True)
         if device not in group.devices:
             group.devices.add(device)
 
@@ -312,7 +313,7 @@ class DeviceGroupRemoveDeviceView(DeviceGroupsPermissionMixin,
         if response is not None:
             return response
 
-        group = DeviceGroup.objects.get(uuid=group_uuid)
+        group = DeviceGroup.objects.get(uuid=group_uuid, is_active=True)
 
         group_form = DeviceGroupDeviceForm(request.POST)
 
@@ -329,7 +330,7 @@ class DeviceGroupRemoveDeviceView(DeviceGroupsPermissionMixin,
         if response is not None:
             return response
 
-        device = Device.objects.get(device_uuid=device_uuid)
+        device = Device.objects.get(device_uuid=device_uuid, is_active=True)
         if device in group.devices:
             group.devices.remove(device)
 
@@ -344,7 +345,7 @@ class DeviceGroupDeleteView(DeviceGroupsPermissionMixin, LoginRequiredMixin, Vie
         if response is not None:
             return response
 
-        group = Device.objects.get(uuid=group_uuid)
+        group = Device.objects.get(uuid=group_uuid, is_active=True)
         group.is_active = False
         group.save()
 
