@@ -52,13 +52,25 @@
 
             <a href="{% url 'version_list' device_uuid=device.uuid %}">Version list</a><br><br>
 
-            <div class="row uniform">
-                <div class="12u">
-                    <ul class="actions align-center">
-                        <li><button type="submit" class="button font icon fa-save">Save changes</button></li>
-                    </ul>
+            <div class="button-left">
+                <div class="row uniform">
+                    <div class="12u">
+                        <ul class="actions align-center">
+                            <li><button type="submit" class="button width font icon fa-save">Save changes</button></li>
+                        </ul>
+                    </div>
                 </div>
-            </div><br>
+            </div>
+        </form>
+
+        <form method="post" action="{% url 'device_delete' device_uuid=device.uuid %}">
+            {% csrf_token %}
+            <div class="button-right">
+                <button type="submit" class="button error icon fa-trash" onclick="return confirm('Are you sure you want to delete this device?');">Delete device</button>
+            </div>
+        </form>
+
+        <form method="post">
 
             <div class="table">
                 <div class="column1" style="margin-right: 5em;">
@@ -71,11 +83,6 @@
                 </div>
             </div>
 
-        </form>
-
-        <form method="post" action="{% url 'device_delete' device_uuid=device.uuid %}">
-            {% csrf_token %}
-            <button type="submit" class="button error icon fa-trash" >Delete device</button>
         </form>
 
     </section>
