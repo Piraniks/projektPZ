@@ -201,14 +201,14 @@ class DeviceGroupListView(LoginRequiredMixin, View):
                                             is_active=True).order_by('timestamp')
 
         context = {'groups': groups}
-        return render(request, self.TEMPLATE, content_type=context)
+        return render(request, self.TEMPLATE, context=context)
 
 
 class DeviceGroupCreateView(LoginRequiredMixin, View):
     TEMPLATE = 'device/group_create.html'
 
     def get(self, request):
-        render(request, self.TEMPLATE)
+        return render(request, self.TEMPLATE)
 
     def post(self, request):
         group_form = DeviceGroupForm(data=request.POST)

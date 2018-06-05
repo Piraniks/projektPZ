@@ -112,7 +112,7 @@ class DeviceGroup(models.Model):
                                    null=True, blank=True)
 
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    devices = models.ManyToManyField(Device, related_name='groups')
+    devices = models.ManyToManyField(Device, related_name='groups', blank=True)
 
     def save(self, *args, **kwargs):
         update_device_group(self.uuid)
