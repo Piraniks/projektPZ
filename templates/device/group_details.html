@@ -22,11 +22,9 @@
             <div class="table">
                 <div class="column1">
                     <b> UUID: </b> <br/>
-                    <b> IP address: </b>
                 </div>
                 <div class="column2">
                     {{ group.uuid }} <br/>
-
                 </div>
             </div><br><br>
 
@@ -50,13 +48,26 @@
                 <br>
             {% endif %}
 
-           <div class="row uniform">
-                <div class="12u">
-                    <ul class="actions align-center">
-                        <li><button type="submit" class="button font icon fa-save">Save changes</button></li>
-                    </ul>
+            <div class="button-left">
+               <div class="row uniform">
+                    <div class="12u">
+                        <ul class="actions align-center">
+                            <li><button type="submit" class="button width font icon fa-save"">Save changes</button></li>
+                        </ul>
+                    </div>
                 </div>
-            </div><br>
+            </div>
+
+        </form>
+
+        <form method="post" action="{% url 'group_delete' group_uuid=group.uuid %}">
+            {% csrf_token %}
+            <div class="button-right">
+                <button type="submit" class="button error icon fa-trash" onclick="return confirm('Are you sure you want to delete this group?');">Delete group</button>
+            </div>
+        </form>
+
+        <form method="post">
 
             <div class="table">
                 <div class="column1" style="margin-right: 5em;">
@@ -71,9 +82,18 @@
 
         </form>
 
-        <form method="post" action="{% url 'group_delete' group_uuid=group.uuid %}">
+        <form method="post" action="{% url 'group_added' group_uuid=group.uuid %}">
             {% csrf_token %}
-            <button type="submit" class="button error icon fa-trash" >Delete group</button>
+            <div class="">
+                <button type="submit" class="button">Show added to group</button>
+            </div>
+        </form>
+
+        <form method="post" action="{% url 'group_available' group_uuid=group.uuid %}">
+            {% csrf_token %}
+            <div class="">
+                <button type="submit" class="button">Add to group</button>
+            </div>
         </form>
 
     </section>
