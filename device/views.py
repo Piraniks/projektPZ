@@ -1,5 +1,6 @@
 import json
 
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
@@ -9,13 +10,14 @@ from django.utils import timezone
 
 from projektPZ import status
 
-from device.models import Device, Version
-from device.forms import DeviceForm, VersionForm, DeviceEditForm
-from device.mixins import DevicePermissionMixin
+from device.models import Device, Version, DeviceGroup
+from device.forms import (DeviceForm, VersionForm, DeviceEditForm,
+                          DeviceGroupForm, DeviceGroupDeviceForm)
+from device.mixins import DevicePermissionMixin, DeviceGroupsPermissionMixin
 
 
-class DeviceView(DevicePermissionMixin, LoginRequiredMixin, View):
-    TEMPLATE = 'device/device.html'
+class DeviceDetailsView(DevicePermissionMixin, LoginRequiredMixin, View):
+    TEMPLATE = 'device/device_details.html'
 
     def get(self, request, device_uuid):
         response = self.validate_user_for_device(request=request,
@@ -46,7 +48,8 @@ class DeviceView(DevicePermissionMixin, LoginRequiredMixin, View):
                 'device': device,
                 'errors': json.loads(device_form.errors.as_json())
             }
-            return render(request, self.TEMPLATE, context=context, status=status.HTTP_400_BAD_REQUEST)
+            return render(request, self.TEMPLATE, context=context,
+                          status=status.HTTP_400_BAD_REQUEST)
 
 
 class DeviceListView(LoginRequiredMixin, View):
@@ -80,7 +83,8 @@ class DeviceCreateView(LoginRequiredMixin, View):
             context = {
                 'errors': json.loads(device_form.errors.as_json())
             }
-            return render(request, self.TEMPLATE, context=context, status=status.HTTP_400_BAD_REQUEST)
+            return render(request, self.TEMPLATE, context=context,
+                          status=status.HTTP_400_BAD_REQUEST)
 
 
 class DeviceDeleteView(DevicePermissionMixin, LoginRequiredMixin, View):
@@ -187,3 +191,161 @@ class VersionListView(DevicePermissionMixin, LoginRequiredMixin, View):
             'device': device
         }
         return render(request, self.TEMPLATE, context=context)
+
+
+class DeviceGroupListView(LoginRequiredMixin, View):
+    TEMPLATE = 'device/group_list.html'
+
+    def get(self, request):
+        groups = DeviceGroup.objects.filter(user=request.user)
+
+        context = {'groups': groups}
+        return render(request, self.TEMPLATE, content_type=context)
+
+
+class DeviceGroupCreateView(LoginRequiredMixin, View):
+    TEMPLATE = 'device/group_create.html'
+
+    def get(self, request):
+        render(request, self.TEMPLATE)
+
+    def post(self, request):
+        group_form = DeviceGroupForm(data=request.POST)
+
+        if group_form.is_valid():
+            new_group = group_form.save(commit=False)
+
+            new_group.owner = request.user
+            new_group.is_active = True
+
+            new_group.save()
+
+            return redirect('group_list')
+        else:
+            context = {
+                'errors': json.loads(group_form.errors.as_json())
+            }
+            return render(request, self.TEMPLATE, context=context,
+                          status=status.HTTP_400_BAD_REQUEST)
+
+
+class DeviceGroupDetailsView(DeviceGroupsPermissionMixin, LoginRequiredMixin, View):
+    TEMPLATE = 'device/group_details.html'
+
+    def get(self, request, group_uuid):
+        response = self.validate_user_for_group(request=request,
+                                                group_uuid=group_uuid)
+        if response is not None:
+            return response
+
+        group = DeviceGroup.objects.get(uuid=group_uuid)
+
+        context = {'group': group}
+        return render(request, self.TEMPLATE, context=context)
+
+    def post(self, request, group_uuid):
+        response = self.validate_user_for_group(request=request,
+                                                group_uuid=group_uuid)
+        if response is not None:
+            return response
+
+        group = DeviceGroup.objects.get(uuid=group_uuid)
+
+        group_form = DeviceGroupForm(request.POST)
+
+        if group_form.is_valid():
+            group.name = group_form.cleaned_data.get('name', group.name)
+            group.save()
+
+            return render(request, self.TEMPLATE, context={'group': group})
+
+        else:
+            context = {
+                'group': group,
+                'errors': json.loads(group_form.errors.as_json())
+            }
+            return render(request, self.TEMPLATE, context=context,
+                          status=status.HTTP_400_BAD_REQUEST)
+
+
+class DeviceGroupAddDeviceView(DeviceGroupsPermissionMixin,
+                               DevicePermissionMixin,
+                               LoginRequiredMixin, View):
+
+    def post(self, request, group_uuid):
+        response = self.validate_user_for_group(request=request,
+                                                group_uuid=group_uuid)
+        if response is not None:
+            return response
+
+        group = DeviceGroup.objects.get(uuid=group_uuid)
+
+        group_form = DeviceGroupDeviceForm(request.POST)
+
+        if group_form.is_valid() is False:
+            data = {
+                'errors': json.loads(group_form.errors.as_json())
+            }
+
+            return JsonResponse(data=data)
+
+        device_uuid = group_form.device_uuid
+        response = self.validate_user_for_device(request=request,
+                                                 device_uuid=device_uuid)
+        if response is not None:
+            return response
+
+        device = Device.objects.get(device_uuid=device_uuid)
+        if device not in group.devices:
+            group.devices.add(device)
+
+        redirect('group_details', group_uuid=group_uuid)
+
+
+class DeviceGroupRemoveDeviceView(DeviceGroupsPermissionMixin,
+                                  DevicePermissionMixin,
+                                  LoginRequiredMixin, View):
+
+    def post(self, request, group_uuid):
+        response = self.validate_user_for_group(request=request,
+                                                group_uuid=group_uuid)
+        if response is not None:
+            return response
+
+        group = DeviceGroup.objects.get(uuid=group_uuid)
+
+        group_form = DeviceGroupDeviceForm(request.POST)
+
+        if group_form.is_valid() is False:
+            data = {
+                'errors': json.loads(group_form.errors.as_json())
+            }
+
+            return JsonResponse(data=data)
+
+        device_uuid = group_form.device_uuid
+        response = self.validate_user_for_device(request=request,
+                                                 device_uuid=device_uuid)
+        if response is not None:
+            return response
+
+        device = Device.objects.get(device_uuid=device_uuid)
+        if device in group.devices:
+            group.devices.remove(device)
+
+        redirect('group_details', group_uuid=group_uuid)
+
+
+class DeviceGroupDeleteView(DeviceGroupsPermissionMixin, LoginRequiredMixin, View):
+
+    def post(self, request, group_uuid):
+        response = self.validate_user_for_group(request=request,
+                                                group_uuid=group_uuid)
+        if response is not None:
+            return response
+
+        group = Device.objects.get(uuid=group_uuid)
+        group.is_active = False
+        group.save()
+
+        return redirect('group_list')

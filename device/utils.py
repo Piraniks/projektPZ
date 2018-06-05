@@ -30,3 +30,8 @@ def checksum(file_name, chunk_size=4096):
 def update_device(ip_address):
     """ Mocks updating device based on the versions in database. """
     print(ip_address)
+
+
+def update_device_group(group_uuid):
+    """ Mocks updating device group based on the versions in database. """
+    print(group_uuid)
