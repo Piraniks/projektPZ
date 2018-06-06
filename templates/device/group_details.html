@@ -84,17 +84,13 @@
         </form>
 
         <form method="post" >
-            <div class="">
-               <a href="{% url  'group_added' group_uuid=group.uuid %}" class="button">Show added to group</a>
+               <a href="{% url  'group_added' group_uuid=group.uuid %}" class="button button-group">Show added to group</a>
             {% csrf_token %}
-            </div>
         </form>
 
         <form method="post" >
-            <div class="">
-                <a href="{% url 'group_available' group_uuid=group.uuid %}" class="button icon fa-plus">Add to group </a>
+                <a href="{% url 'group_available' group_uuid=group.uuid %}" class="button button-group icon fa-plus">Add to group </a>
             {% csrf_token %}
-            </div>
         </form>
 
     </section>
