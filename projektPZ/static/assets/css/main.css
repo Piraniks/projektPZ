@@ -3842,4 +3842,13 @@
 	 	cursor: pointer;
 		text-decoration: none;
 		margin-top: 10px;
-}
+		margin-left: -3.5em;
+	}
+
+	.button-link.error {
+		color: #ff4747;
+	}
+
+		.button-link.error:hover {
+			color: #ff5454;
+		}
