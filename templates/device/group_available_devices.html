@@ -19,11 +19,11 @@
 
             {% for device in devices %}
                 <div class="row" >
-                    <div class="10u 12u(mobilep)">
+                    <div class="10u 12u(mobilep)" style="margin-left: 15px;">
                      <a href="{% url 'device_details' device_uuid=device.uuid %}">{{ device.name }}</a><br>
                 {{ device.uuid }}
                     </div>
-                <div class="2u 12u(mobilep)">
+                <div class="2u 12u(mobilep)" style="margin-left: -15px;">
                 <form method="post" action="{% url 'group_add' group_uuid=group.uuid %}">
                     {% csrf_token %}
                     <input type="hidden" name="device_uuid" id="device_uuid" value="{{ device.uuid }}">
