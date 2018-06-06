@@ -261,7 +261,7 @@ class DeviceTestCase(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
-class VersionTestCase(TransactionTestCase):
+class DeviceVersionTestCase(TransactionTestCase):
     def setUp(self):
         self.device_owner = User.objects.create_user(username='owner',
                                                      password='password')
@@ -307,7 +307,7 @@ class VersionTestCase(TransactionTestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
-class CreateVersionTestCase(TransactionTestCase):
+class CreateDeviceVersionTestCase(TransactionTestCase):
     def setUp(self):
         self.device_owner = User.objects.create_user(username='owner',
                                                      password='password')
@@ -917,3 +917,201 @@ class DeviceGroupAddDeviceTestCase(TransactionTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIsNone(device)
+
+
+class GroupVersionTestCase(TransactionTestCase):
+    def setUp(self):
+        self.owner = User.objects.create_user(username='owner',
+                                              password='password')
+
+        self.device_group = DeviceGroup.objects.create(name='device_group',
+                                                       owner=self.owner)
+
+        self.version = Version.objects.create(name='version',
+                                              versioned_object=self.device_group)
+
+        self.device_group.version = self.version
+        self.device_group.save()
+
+    def test_list_versions_for_valid_device(self):
+        self.client.force_login(self.owner)
+
+        response = self.client.get(
+            reverse('group_version_list',
+                    kwargs={'group_uuid': self.device_group.uuid})
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_list_versions_for_not_existing_device_uuid(self):
+        self.client.force_login(self.owner)
+
+        new_uuid = uuid4()
+
+        response = self.client.get(
+            reverse('group_version_list',
+                    kwargs={'group_uuid': new_uuid})
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_list_versions_for_device_without_permissions(self):
+        other_user = User.objects.create_user(username='user2', password='password')
+        self.client.force_login(other_user)
+
+        response = self.client.get(
+            reverse('group_version_list',
+                    kwargs={'group_uuid': self.device_group.uuid})
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+
+class CreateGroupVersionTestCase(TransactionTestCase):
+    def setUp(self):
+        self.owner = User.objects.create_user(username='owner',
+                                              password='password')
+
+        self.device_group = DeviceGroup.objects.create(name='device_group',
+                                                       owner=self.owner)
+
+    def test_get_version_create_view_for_valid_device(self):
+        self.client.force_login(self.owner)
+
+        response = self.client.get(
+            reverse('group_version_create',
+                    kwargs={'group_uuid': self.device_group.uuid})
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_get_version_create_view_for_not_existing_device_uuid(self):
+        self.client.force_login(self.owner)
+
+        new_uuid = uuid4()
+
+        response = self.client.get(
+            reverse('group_version_create',
+                    kwargs={'group_uuid': new_uuid})
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_get_version_create_view_without_permissions(self):
+        other_user = User.objects.create_user(username='user2', password='password')
+        self.client.force_login(other_user)
+
+        response = self.client.get(
+            reverse('group_version_create',
+                    kwargs={'group_uuid': self.device_group.uuid})
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    # POST
+    def test_post_without_version_file_and_name(self):
+        self.client.force_login(self.owner)
+
+        response = self.client.post(
+            reverse('group_version_create',
+                    kwargs={'group_uuid': self.device_group.uuid}),
+            data={}
+        )
+
+        device_group = DeviceGroup.objects.get(pk=self.device_group.pk)
+
+        self.assertIsNone(device_group.last_updated)
+        self.assertIsNone(device_group.version)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_version_create_for_not_existing_device_uuid(self):
+        self.client.force_login(self.owner)
+
+        new_uuid = uuid4()
+        version_name = 'version'
+        version_file = SimpleUploadedFile('testfile.txt',
+                                          b'example content')
+
+        response = self.client.post(
+            reverse('group_version_create',
+                    kwargs={'group_uuid': new_uuid}),
+            data={'name': version_name, 'file': version_file}
+        )
+
+        device_group = DeviceGroup.objects.get(pk=self.device_group.pk)
+
+        self.assertIsNone(device_group.last_updated)
+        self.assertIsNone(device_group.version)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_version_create_without_permissions(self):
+        other_user = User.objects.create_user(username='user2', password='password')
+        self.client.force_login(other_user)
+        version_name = 'version'
+        version_file = SimpleUploadedFile('testfile.txt',
+                                          b'example content')
+
+        response = self.client.post(
+            reverse('group_version_create',
+                    kwargs={'group_uuid': self.device_group.uuid}),
+            data={'name': version_name, 'file': version_file}
+        )
+
+        device_group = DeviceGroup.objects.get(pk=self.device_group.pk)
+
+        self.assertIsNone(device_group.last_updated)
+        self.assertIsNone(device_group.version)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_post_with_valid_version_file_and_name(self):
+        self.client.force_login(self.owner)
+        version_name = 'version'
+        version_file = SimpleUploadedFile('testfile.txt',
+                                          b'example content')
+
+        response = self.client.post(
+            reverse('group_version_create',
+                    kwargs={'group_uuid': self.device_group.uuid}),
+            data={'name': version_name, 'file': version_file}
+        )
+
+        version_created = Version.objects.filter(name=version_name).first()
+
+        self.assertRedirects(response,
+                             reverse('group_version_list',
+                                     kwargs={'group_uuid': self.device_group.uuid})
+                             )
+        self.assertIsNotNone(version_created)
+        self.assertEqual(version_created.versioned_object.id,
+                         self.device_group.id)
+
+    def test_post_with_existing_older_version(self):
+        old_version_name = 'test'
+        old_version = Version.objects.create(versioned_object=self.device_group,
+                                             name=old_version_name)
+        self.device_group.version = old_version
+        self.device_group.save()
+
+        self.client.force_login(self.owner)
+        version_name = 'version'
+        version_file = SimpleUploadedFile('testfile.txt',
+                                          b'example content')
+
+        response = self.client.post(
+            reverse('group_version_create',
+                    kwargs={'group_uuid': self.device_group.uuid}),
+            data={'name': version_name, 'file': version_file}
+        )
+
+        device_group = DeviceGroup.objects.get(name=self.device_group.name)
+        new_version = Version.objects.get(name=version_name)
+        old_version = Version.objects.get(name=old_version_name)
+
+        self.assertRedirects(response,
+                             reverse('group_version_list',
+                                     kwargs={'group_uuid': self.device_group.uuid})
+                             )
+        self.assertNotEqual(new_version.uuid, old_version.uuid)
+        self.assertEqual(new_version.uuid, old_version.next.uuid)
+        self.assertEqual(old_version.uuid, new_version.previous.uuid)
+        self.assertIsNotNone(device_group.version)
