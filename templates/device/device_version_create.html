@@ -13,9 +13,9 @@
             <hr />
         </header>
 
-        <a href="{% url 'version_list' device_uuid=device_uuid %}" class="arrow_back"><i class="icon fa-angle-left fa-2x"></i></a>
+        <a href="{% url 'device_version_list' device_uuid=device_uuid %}" class="arrow_back"><i class="icon fa-angle-left fa-2x"></i></a>
 
-        <form method="post" action="{% url 'version_create' device_uuid=device_uuid %}" enctype="multipart/form-data">
+        <form method="post" action="{% url 'device_version_create' device_uuid=device_uuid %}" enctype="multipart/form-data">
 
             {% csrf_token %}
 

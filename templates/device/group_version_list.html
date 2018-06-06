@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Your versions for group {{ group.name }} </title>
+{% endblock %}
+
+{% block content %}
+
+    <section id="main" class="container 50%">
+
+    <header>
+        <h2>Your versions for group <b> {{ group.name }} </b></h2>
+        <hr />
+    </header>
+
+        <a href="{% url 'group_details' group_uuid=group.uuid %}" class="arrow_back"><i class="icon fa-angle-left fa-2x"></i></a>
+
+        <form method="post">
+
+            {% if versions %}
+
+                {% for version in versions %}
+
+                    <b id="version"> {{ version.name }} </b> <br><br>
+                    {{ version.uuid }}<br><br>
+
+                    <div class="table margin">
+                        <div class="column1">
+                            <b> Creator's name: </b> <br>
+                            <b> Creation date: </b>
+                        </div>
+                        <div class="column2">
+                            {{ version.creator.username }} <br>
+                            {{ version.timestamp | date:'Y-m-d H:i:s' }}
+                        </div>
+                    </div>
+                    <br><br>
+
+
+                {% endfor %}
+
+            {% else %}
+
+                <p>Whoops! You have no versions added yet &nbsp;<i class="icon fa-frown-o fa-lg"></i></p><br>
+
+            {% endif %}
+
+            <div class="row uniform">
+                <div class="12u">
+                    <ul class="actions align-center">
+                        <ul class="actions">
+                            <li><a href="{% url 'group_version_create' group_uuid=group.uuid %}" class="button font2 margin icon fa-plus">Add new version</a></li>
+                        </ul>
+                    </ul>
+                </div>
+            </div>
+
+        </form>
+
+    </section>
+
+{% endblock %}

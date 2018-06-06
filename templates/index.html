@@ -28,7 +28,7 @@
                 <nav id="nav">
                     <ul>
                         {% if user.is_authenticated %}
-                            <li>Hi! {{ user.username }}</li>
+                            <li>Hi! {{ user.username }} &nbsp;</li>
                             <li><a href="{% url 'device_list' %}">Your devices</a></li>
                             <li><a href="{% url 'logout' %}" class="button navig">Log out</a></li>
                         {% else %}

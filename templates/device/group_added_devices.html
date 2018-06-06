@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Devices added to group</title>
+{% endblock %}
+
+{% block content %}
+
+    <section id="main" class="container 50%">
+
+        <header>
+            <h2>Devices added to group</h2>
+            <hr />
+        </header>
+
+        <a href="{% url 'group_details' group_uuid=group.uuid %}" class="arrow_back"><i class="icon fa-angle-left fa-2x"></i></a>
+
+        {% if devices %}
+
+          {% for device in devices %}
+                <div class="row">
+                    <div class="11u 12u(mobilep)" style="margin-left: 15px;">
+                        <a href="{% url 'device_details' device_uuid=device.uuid %}">{{ device.name }}</a><br>
+                        {{ device.uuid }}
+                    </div>
+                    <div class="1u 12u(mobilep)" style="margin-left: -15px;">
+                        <form method="post" action="{% url 'group_remove' group_uuid=group.uuid %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="device_uuid" id="device_uuid" value="{{ device.uuid }}">
+                            <button type="submit" class="button-link error icon fa-minus-circle "/>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+
+        {% else %}
+
+            <p>Whoops! You have no devices added to this group yet &nbsp;<i class="icon fa-frown-o fa-lg"></i></p>
+
+        {% endif %}
+
+        <form method="post" >
+            <div class="">
+                <br>
+                <a href="{% url 'group_available' group_uuid=group.uuid %}" class="button icon fa-plus">Add to group </a>
+            {% csrf_token %}
+            </div>
+        </form>
+
+
+    </section>
+
+{% endblock %}
