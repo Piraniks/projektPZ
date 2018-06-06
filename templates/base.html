@@ -31,6 +31,7 @@
                         {% if user.is_authenticated %}
                             <li>Hi! {{ user.username }}</li>
                             <li><a href="{% url 'device_list' %}">Your devices</a></li>
+                            <li><a href="{% url 'group_list' %}">Groups</a></li>
                             <li><a href="{% url 'logout' %}" class="button">Log out</a></li>
 
                         {% else %}
