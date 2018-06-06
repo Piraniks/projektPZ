@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    <title>Your devices</title>
+    <title>Available devices</title>
 {% endblock %}
 
 {% block content %}
@@ -9,23 +9,30 @@
     <section id="main" class="container 50%">
 
         <header>
-            <h2>Your devices</h2>
+            <h2>Available devices</h2>
             <hr />
         </header>
 
-        <a href="{% url 'index' %}" class="arrow_back"><i class="icon fa-angle-left fa-2x"></i></a>
+        <a href="{% url 'group_details' group_uuid=group.uuid %}" class="arrow_back"><i class="icon fa-angle-left fa-2x"></i></a>
 
         {% if devices %}
-
             {% for device in devices %}
-                <a href="{% url 'device_details' device_uuid=device.uuid %}">{{ device.name }}</a><br>
-                {{ device.uuid }}<br><br>
+                <div class="row" >
+                    <div class="10u 12u(mobilep)" style="margin-left: 15px;">
+                         <a href="{% url 'device_details' device_uuid=device.uuid %}">{{ device.name }}</a><br>
+                        {{ device.uuid }}
+                    </div>
+                    <div class="2u 12u(mobilep)" style="margin-left: -15px;">
+                        <form method="post" action="{% url 'group_add' group_uuid=group.uuid %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="device_uuid" id="device_uuid" value="{{ device.uuid }}">
+                            <button type="submit" class="button-link icon fa-plus-circle"/>
+                        </form>
+                    </div>
+                </div>
             {% endfor %}
-
         {% else %}
-
-            <p>Whoops! You have no devices added yet &nbsp;<i class="icon fa-frown-o fa-lg"></i></p>
-
+            <p>Whoops! You have no groups added yet &nbsp;<i class="icon fa-frown-o fa-lg"></i></p>
         {% endif %}
 
         <div class="pagination">
@@ -44,16 +51,6 @@
                     <a href="?page={{ devices.paginator.num_pages }}" class="paginator-arrow"><i class="icon fa-angle-double-right fa-lg"></i></a>
                 {% endif %}
             </span>
-        </div>
-
-        <div class="row uniform">
-            <div class="12u">
-                <ul class="actions align-center">
-                    <ul class="actions">
-                        <li><br><a href="{% url 'device_create' %}" class="button font2 icon fa-plus">Add new device</a></li>
-                    </ul>
-                </ul>
-            </div>
         </div>
 
 

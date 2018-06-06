@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    <title>Device details</title>
+    <title>Group details</title>
 {% endblock %}
 
 {% block content %}
@@ -9,30 +9,28 @@
     <section id="main" class="container 50%">
 
         <header>
-            <h2>Device details</h2>
+            <h2>Group details</h2>
             <hr />
         </header>
 
         <form method="post">
 
-            <a href="{% url 'device_list' %}" class="arrow_back"><i class="icon fa-angle-left fa-2x"></i></a>
+            <a href="{% url 'group_list' %}" class="arrow_back"><i class="icon fa-angle-left fa-2x"></i></a>
 
             {% csrf_token %}
 
             <div class="table">
                 <div class="column1">
                     <b> UUID: </b> <br/>
-                    <b> IP address: </b>
                 </div>
                 <div class="column2">
-                    {{ device.uuid }} <br/>
-                    {{ device.ip_address }}
+                    {{ group.uuid }} <br/>
                 </div>
             </div><br><br>
 
             <center>
                 <div class="input-width">
-                    <input type="text" value="{{ device.name }}" title="name" id="name" name="name" autofocus required
+                    <input type="text" value="{{ group.name }}" title="name" id="name" name="name" autofocus required
                        oninvalid="this.setCustomValidity('This field should not be left blank')"
                        oninput="setCustomValidity('')"><br>
                 </div>
@@ -50,15 +48,21 @@
                 <br>
             {% endif %}
 
-            <a href="{% url 'version_list' device_uuid=device.uuid %}">Version list</a><br><br>
+            <div class="button-left">
+                 <button type="submit" class="button width font icon fa-save"">Save changes</button>
+            </div>
+        </form>
 
-            <div class="row uniform">
-                <div class="12u">
-                    <ul class="actions align-center">
-                        <li><button type="submit" class="button font icon fa-save">Save changes</button></li>
-                    </ul>
-                </div>
-            </div><br>
+        <form method="post" action="{% url 'group_delete' group_uuid=group.uuid %}">
+            {% csrf_token %}
+            <div class="button-right">
+                <button type="submit" class="button error icon fa-trash" onclick="return confirm('Are you sure you want to delete this group?');">Delete group</button>
+            </div>
+        </form>
+
+        <a href="{% url 'group_version_list' group_uuid=group.uuid %}">Version list</a><br><br>
+
+        <form method="post">
 
             <div class="table">
                 <div class="column1" style="margin-right: 5em;">
@@ -66,16 +70,21 @@
                     <b> Modification date: </b>
                 </div>
                 <div class="column2">
-                    {{ device.timestamp | date:'Y-m-d H:i:s' }} <br>
-                    {{ device.last_edited | date:'Y-m-d H:i:s' }}
+                    {{ group.timestamp | date:'Y-m-d H:i:s' }} <br>
+                    {{ group.last_edited | date:'Y-m-d H:i:s' }}
                 </div>
             </div>
 
         </form>
 
-        <form method="post" action="{% url 'device_delete' device_uuid=device.uuid %}">
+        <form method="post" >
+               <a href="{% url  'group_added' group_uuid=group.uuid %}" class="button button-group">Show added to group</a>
             {% csrf_token %}
-            <button type="submit" class="button error icon fa-trash" >Delete device</button>
+        </form>
+
+        <form method="post" >
+                <a href="{% url 'group_available' group_uuid=group.uuid %}" class="button button-group icon fa-plus">Add to group </a>
+            {% csrf_token %}
         </form>
 
     </section>

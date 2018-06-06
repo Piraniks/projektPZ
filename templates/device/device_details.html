@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <title>Device details</title>
+{% endblock %}
+
+{% block content %}
+
+    <section id="main" class="container 50%">
+
+        <header>
+            <h2>Device details</h2>
+            <hr />
+        </header>
+
+        <form method="post">
+
+            <a href="{% url 'device_list' %}" class="arrow_back"><i class="icon fa-angle-left fa-2x"></i></a>
+
+            {% csrf_token %}
+
+            <div class="table">
+                <div class="column1">
+                    <b> UUID: </b> <br/>
+                    <b> IP address: </b>
+                </div>
+                <div class="column2">
+                    {{ device.uuid }} <br/>
+                    {{ device.ip_address }}
+                </div>
+            </div><br><br>
+
+            <center>
+                <div class="input-width">
+                    <input type="text" value="{{ device.name }}" title="name" id="name" name="name" autofocus required
+                       oninvalid="this.setCustomValidity('This field should not be left blank')"
+                       oninput="setCustomValidity('')"><br>
+                </div>
+            </center>
+
+            {% if errors %}
+                <div>
+                     {% for field, errors in errors.items %}
+                         {% for error in errors %}
+                             <b class="error"> {{ error.message }} </b>
+                             <br>
+                         {% endfor %}
+                     {% endfor %}
+                </div>
+                <br>
+            {% endif %}
+
+            <div class="button-left">
+                <button type="submit" class="button width font icon fa-save">Save changes</button>
+            </div>
+        </form>
+
+        <form method="post" action="{% url 'device_delete' device_uuid=device.uuid %}">
+            {% csrf_token %}
+            <div class="button-right">
+                <button type="submit" class="button error icon fa-trash" onclick="return confirm('Are you sure you want to delete this device?');">Delete device</button>
+            </div>
+        </form>
+
+        <a href="{% url 'device_version_list' device_uuid=device.uuid %}">Version list</a><br><br>
+
+        <form method="post">
+
+            <div class="table">
+                <div class="column1" style="margin-right: 5em;">
+                    <b> Creation date: </b> <br>
+                    <b> Modification date: </b>
+                </div>
+                <div class="column2">
+                    {{ device.timestamp | date:'Y-m-d H:i:s' }} <br>
+                    {{ device.last_edited | date:'Y-m-d H:i:s' }}
+                </div>
+            </div>
+
+        </form>
+
+    </section>
+
+{% endblock %}

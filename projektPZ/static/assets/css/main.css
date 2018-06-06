@@ -2613,6 +2613,10 @@
 		white-space: nowrap;
 	}
 
+		.button.width {
+			width: 10.2em;
+		}
+
         .button.font {
             font-size: 0.95em;
         }
@@ -2629,7 +2633,12 @@
             font-size: 0.95em;
             color: #ffffff;
             background-color: #ff4747;
+			width: 10.2em;
         }
+
+			.button.error:hover {
+				background-color: #ff5454;
+			}
 
         .button.navig {
             width: 5em;
@@ -3782,6 +3791,11 @@
         top: 4em;
     }
 
+	.paginator-arrow{
+		color: #666;
+		margin: 3px;
+	}
+
     .error {
         color: #ff4747;
     }
@@ -3813,3 +3827,39 @@
     #version {
         font-size: 20px;
     }
+
+	.button-left {
+
+		margin-right: 10em;
+	}
+
+	.button-right {
+		margin-top: -4.85em;
+		margin-left: 10em;
+	}
+
+	.button.button-group{
+		width: 215px;
+		margin-bottom: -1em;
+	}
+
+	.button-link {
+		background:none;
+	 	color:inherit;
+	 	border:0;
+	 	padding:0;
+	 	font: inherit;
+		font-size: 30px;
+	 	cursor: pointer;
+		text-decoration: none;
+		margin-top: 10px;
+		margin-left: -3.5em;
+	}
+
+	.button-link.error {
+		color: #ff4747;
+	}
+
+		.button-link.error:hover {
+			color: #ff5454;
+		}
