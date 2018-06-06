@@ -280,7 +280,7 @@ class VersionTestCase(TransactionTestCase):
         self.client.force_login(self.device_owner)
 
         response = self.client.get(
-            reverse('version_list', kwargs={'device_uuid': self.device.uuid})
+            reverse('device_version_list', kwargs={'device_uuid': self.device.uuid})
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -291,7 +291,7 @@ class VersionTestCase(TransactionTestCase):
         new_uuid = uuid4()
 
         response = self.client.get(
-            reverse('version_list', kwargs={'device_uuid': str(new_uuid)})
+            reverse('device_version_list', kwargs={'device_uuid': str(new_uuid)})
         )
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
@@ -301,7 +301,7 @@ class VersionTestCase(TransactionTestCase):
         self.client.force_login(other_user)
 
         response = self.client.get(
-            reverse('version_list', kwargs={'device_uuid': self.device.uuid})
+            reverse('device_version_list', kwargs={'device_uuid': self.device.uuid})
         )
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -320,7 +320,7 @@ class CreateVersionTestCase(TransactionTestCase):
         self.client.force_login(self.device_owner)
 
         response = self.client.get(
-            reverse('version_create', kwargs={'device_uuid': self.device.uuid})
+            reverse('device_version_create', kwargs={'device_uuid': self.device.uuid})
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -331,7 +331,7 @@ class CreateVersionTestCase(TransactionTestCase):
         new_uuid = uuid4()
 
         response = self.client.get(
-            reverse('version_create', kwargs={'device_uuid': str(new_uuid)})
+            reverse('device_version_create', kwargs={'device_uuid': str(new_uuid)})
         )
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
@@ -341,7 +341,7 @@ class CreateVersionTestCase(TransactionTestCase):
         self.client.force_login(other_user)
 
         response = self.client.get(
-            reverse('version_create', kwargs={'device_uuid': self.device.uuid})
+            reverse('device_version_create', kwargs={'device_uuid': self.device.uuid})
         )
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -351,7 +351,7 @@ class CreateVersionTestCase(TransactionTestCase):
         self.client.force_login(self.device_owner)
 
         response = self.client.post(
-            reverse('version_create', kwargs={'device_uuid': self.device.uuid}),
+            reverse('device_version_create', kwargs={'device_uuid': self.device.uuid}),
             data={}
         )
 
@@ -370,7 +370,7 @@ class CreateVersionTestCase(TransactionTestCase):
                                           b'example content')
 
         response = self.client.post(
-            reverse('version_create', kwargs={'device_uuid': str(new_uuid)}),
+            reverse('device_version_create', kwargs={'device_uuid': str(new_uuid)}),
             data={'name': version_name, 'file': version_file}
         )
 
@@ -388,7 +388,7 @@ class CreateVersionTestCase(TransactionTestCase):
                                           b'example content')
 
         response = self.client.post(
-            reverse('version_create', kwargs={'device_uuid': self.device.uuid}),
+            reverse('device_version_create', kwargs={'device_uuid': self.device.uuid}),
             data={'name': version_name, 'file': version_file}
         )
 
@@ -405,14 +405,14 @@ class CreateVersionTestCase(TransactionTestCase):
                                           b'example content')
 
         response = self.client.post(
-            reverse('version_create', kwargs={'device_uuid': self.device.uuid}),
+            reverse('device_version_create', kwargs={'device_uuid': self.device.uuid}),
             data={'name': version_name, 'file': version_file}
         )
 
         version_created = Version.objects.filter(name=version_name).first()
 
         self.assertRedirects(response,
-                             reverse('version_list',
+                             reverse('device_version_list',
                                      kwargs={'device_uuid': self.device.uuid})
                              )
         self.assertIsNotNone(version_created)
@@ -431,7 +431,7 @@ class CreateVersionTestCase(TransactionTestCase):
                                           b'example content')
 
         response = self.client.post(
-            reverse('version_create', kwargs={'device_uuid': self.device.uuid}),
+            reverse('device_version_create', kwargs={'device_uuid': self.device.uuid}),
             data={'name': version_name, 'file': version_file}
         )
 
@@ -440,7 +440,7 @@ class CreateVersionTestCase(TransactionTestCase):
         old_version = Version.objects.get(name=old_version_name)
 
         self.assertRedirects(response,
-                             reverse('version_list',
+                             reverse('device_version_list',
                                      kwargs={'device_uuid': self.device.uuid})
                              )
         self.assertNotEqual(new_version.uuid, old_version.uuid)
