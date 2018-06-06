@@ -101,8 +101,8 @@ class DeviceDeleteView(DevicePermissionMixin, LoginRequiredMixin, View):
         return redirect('device_list')
 
 
-class VersionCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
-    TEMPLATE = 'device/version_create.html'
+class DeviceVersionCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
+    TEMPLATE = 'device/device_version_create.html'
     INTEGRITY_ERROR_MESSAGE = ('Integrity error has been encountered. '
                                'Contact the service administrator.')
 
@@ -169,11 +169,83 @@ class VersionCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
             }
             return render(request, self.TEMPLATE, context=context)
 
-        return redirect('version_list', device_uuid=device.uuid)
+        return redirect('device_version_list', device_uuid=device.uuid)
 
 
-class VersionListView(DevicePermissionMixin, LoginRequiredMixin, View):
-    TEMPLATE = 'device/version_list.html'
+class GroupVersionCreateView(DeviceGroupsPermissionMixin,
+                             LoginRequiredMixin, View):
+    TEMPLATE = 'device/group_version_create.html'
+    INTEGRITY_ERROR_MESSAGE = ('Integrity error has been encountered. '
+                               'Contact the service administrator.')
+
+    def get(self, request, group_uuid):
+        response = self.validate_user_for_group(request=request,
+                                                group_uuid=group_uuid)
+        if response is not None:
+            return response
+
+        context = {'group_uuid': group_uuid}
+        return render(request, self.TEMPLATE, context=context)
+
+    def post(self, request, group_uuid):
+        response = self.validate_user_for_group(request=request,
+                                                group_uuid=group_uuid)
+        if response is not None:
+            return response
+
+        group = DeviceGroup.objects.get(uuid=group_uuid, is_active=True)
+        version_form = VersionForm(data=request.POST, files=request.FILES)
+
+        if version_form.is_valid() is False:
+            context = {
+                'errors': json.loads(version_form.errors.as_json()),
+                'group_uuid': group.uuid
+            }
+
+            return render(request, self.TEMPLATE,
+                          context=context,
+                          status=status.HTTP_400_BAD_REQUEST)
+
+        new_version = version_form.save(commit=False)
+        old_version = group.version
+
+        new_version.creator = request.user
+        new_version.versioned_object = group
+        new_version.previous = old_version
+
+        try:
+            with transaction.atomic():
+                new_version.save()
+
+                # Add checksum for already created file.
+                new_version.generate_checksum()
+
+                if old_version is not None:
+                    old_version.next = new_version
+                    old_version.save()
+
+                group.last_updated = timezone.now()
+                group.version = new_version
+                group.save()
+
+        except IntegrityError:
+            # If any integrity error is raised inform the user but
+            # don't blow up. Just for when we become next Facebook.
+            context = {
+                "errors": {
+                    "data": [{
+                        "message": self.INTEGRITY_ERROR_MESSAGE
+                    }],
+                },
+                'group_uuid': group.uuid
+            }
+            return render(request, self.TEMPLATE, context=context)
+
+        return redirect('group_version_list', device_uuid=group.uuid)
+
+
+class DeviceVersionListView(DevicePermissionMixin, LoginRequiredMixin, View):
+    TEMPLATE = 'device/device_version_list.html'
 
     def get(self, request, device_uuid):
         response = self.validate_user_for_device(request=request,
@@ -184,11 +256,33 @@ class VersionListView(DevicePermissionMixin, LoginRequiredMixin, View):
         device = Device.objects.get(uuid=device_uuid, is_active=True)
 
         device_content_type = ContentType.objects.get_for_model(device)
-        devices = Version.objects.filter(object_id=device.id,
-                                         content_type=device_content_type)
+        versions = Version.objects.filter(object_id=device.id,
+                                          content_type=device_content_type)
         context = {
-            'versions': devices,
+            'versions': versions,
             'device': device
+        }
+        return render(request, self.TEMPLATE, context=context)
+
+
+class GroupVersionListView(DeviceGroupsPermissionMixin,
+                           LoginRequiredMixin, View):
+    TEMPLATE = 'device/group_version_list.html'
+
+    def get(self, request, group_uuid):
+        response = self.validate_user_for_group(request=request,
+                                                group_uuid=group_uuid)
+        if response is not None:
+            return response
+
+        group = DeviceGroup.objects.get(uuid=group_uuid, is_active=True)
+
+        group_content_type = ContentType.objects.get_for_model(group)
+        versions = Version.objects.filter(object_id=group.id,
+                                          content_type=group_content_type)
+        context = {
+            'versions': versions,
+            'group': group
         }
         return render(request, self.TEMPLATE, context=context)
 
@@ -301,7 +395,7 @@ class DeviceGroupAddDeviceView(DeviceGroupsPermissionMixin,
         if device not in group.devices.all():
             group.devices.add(device)
 
-        return redirect('group_details', group_uuid=group_uuid)
+        return redirect('group_added', group_uuid=group_uuid)
 
 
 class DeviceGroupRemoveDeviceView(DeviceGroupsPermissionMixin,
@@ -336,7 +430,7 @@ class DeviceGroupRemoveDeviceView(DeviceGroupsPermissionMixin,
         if device in group.devices.all():
             group.devices.remove(device)
 
-        return redirect('group_details', group_uuid=group_uuid)
+        return redirect('group_added', group_uuid=group_uuid)
 
 
 class DeviceGroupAddedDeviceView(DeviceGroupsPermissionMixin,
@@ -352,7 +446,11 @@ class DeviceGroupAddedDeviceView(DeviceGroupsPermissionMixin,
         group = DeviceGroup.objects.get(uuid=group_uuid, is_active=True)
         devices = group.devices.exclude(is_active=False)
 
-        return render(request, self.TEMPLATE, context={'devices': devices})
+        context = {
+            'devices': devices,
+            'group': group
+        }
+        return render(request, self.TEMPLATE, context=context)
 
 
 class DeviceGroupAvailableDeviceView(DeviceGroupsPermissionMixin,
@@ -368,7 +466,11 @@ class DeviceGroupAvailableDeviceView(DeviceGroupsPermissionMixin,
         group = DeviceGroup.objects.get(uuid=group_uuid, is_active=True)
         devices = Device.objects.exclude(groups=group).exclude(is_active=False).filter(owner=group.owner)
 
-        return render(request, self.TEMPLATE, context={'devices': devices})
+        context = {
+            'devices': devices,
+            'group': group
+        }
+        return render(request, self.TEMPLATE, context=context)
 
 
 class DeviceGroupDeleteView(DeviceGroupsPermissionMixin,
