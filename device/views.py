@@ -241,7 +241,7 @@ class GroupVersionCreateView(DeviceGroupsPermissionMixin,
             }
             return render(request, self.TEMPLATE, context=context)
 
-        return redirect('group_version_list', device_uuid=group.uuid)
+        return redirect('group_version_list', group_uuid=group.uuid)
 
 
 class DeviceVersionListView(DevicePermissionMixin, LoginRequiredMixin, View):
