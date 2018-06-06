@@ -16,30 +16,43 @@
         <a href="{% url 'group_details' group_uuid=group.uuid %}" class="arrow_back"><i class="icon fa-angle-left fa-2x"></i></a>
 
         {% if devices %}
-
             {% for device in devices %}
                 <div class="row" >
                     <div class="10u 12u(mobilep)" style="margin-left: 15px;">
-                     <a href="{% url 'device_details' device_uuid=device.uuid %}">{{ device.name }}</a><br>
-                {{ device.uuid }}
+                         <a href="{% url 'device_details' device_uuid=device.uuid %}">{{ device.name }}</a><br>
+                        {{ device.uuid }}
                     </div>
-                <div class="2u 12u(mobilep)" style="margin-left: -15px;">
-                <form method="post" action="{% url 'group_add' group_uuid=group.uuid %}">
-                    {% csrf_token %}
-                    <input type="hidden" name="device_uuid" id="device_uuid" value="{{ device.uuid }}">
-                    <button type="submit" class="button-link icon fa-plus-circle"/>
-                </form>
+                    <div class="2u 12u(mobilep)" style="margin-left: -15px;">
+                        <form method="post" action="{% url 'group_add' group_uuid=group.uuid %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="device_uuid" id="device_uuid" value="{{ device.uuid }}">
+                            <button type="submit" class="button-link icon fa-plus-circle"/>
+                        </form>
+                    </div>
                 </div>
-                </div>
-
-
             {% endfor %}
-
         {% else %}
-
             <p>Whoops! You have no groups added yet &nbsp;<i class="icon fa-frown-o fa-lg"></i></p>
-
         {% endif %}
+
+        <div class="pagination">
+            <span class="step-links">
+                {% if devices.has_previous %}
+                    <a href="?page=1" class="paginator-arrow"><i class="icon fa-angle-double-left fa-lg"></i></a>
+                    <a href="?page={{ devices.previous_page_number }}" class="paginator-arrow"><i class="icon fa-angle-left fa-lg"></i></a>
+                {% endif %}
+
+                <span class="current">
+                    <b> &nbsp;{{ devices.number }} of {{ devices.paginator.num_pages }}&nbsp;</b>
+                </span>
+
+                {% if devices.has_next %}
+                    <a href="?page={{ devices.next_page_number }}" class="paginator-arrow"><i class="icon fa-angle-right fa-lg"></i></a>
+                    <a href="?page={{ devices.paginator.num_pages }}" class="paginator-arrow"><i class="icon fa-angle-double-right fa-lg"></i></a>
+                {% endif %}
+            </span>
+        </div>
+
 
     </section>
 

@@ -28,6 +28,24 @@
 
         {% endif %}
 
+        <div class="pagination">
+            <span class="step-links">
+                {% if groups.has_previous %}
+                    <a href="?page=1" class="paginator-arrow"><i class="icon fa-angle-double-left fa-lg"></i></a>
+                    <a href="?page={{ groups.previous_page_number }}" class="paginator-arrow"><i class="icon fa-angle-left fa-lg"></i></a>
+                {% endif %}
+
+                <span class="current">
+                    <b> &nbsp;{{ groups.number }} of {{ groups.paginator.num_pages }}&nbsp;</b>
+                </span>
+
+                {% if groups.has_next %}
+                    <a href="?page={{ groups.next_page_number }}" class="paginator-arrow"><i class="icon fa-angle-right fa-lg"></i></a>
+                    <a href="?page={{ groups.paginator.num_pages }}" class="paginator-arrow"><i class="icon fa-angle-double-right fa-lg"></i></a>
+                {% endif %}
+            </span>
+        </div>
+
         <div class="row uniform">
             <div class="12u">
                 <ul class="actions align-center">
