@@ -2,7 +2,7 @@ from django.urls import path
 
 from device.views import (
     DeviceDetailsView, DeviceListView, DeviceCreateView, DeviceDeleteView,
-    VersionCreateView, VersionListView,
+    DeviceVersionCreateView, DeviceVersionListView,
     DeviceGroupCreateView, DeviceGroupDeleteView,
     DeviceGroupAddDeviceView, DeviceGroupRemoveDeviceView,
     DeviceGroupAddedDeviceView, DeviceGroupAvailableDeviceView,
@@ -35,7 +35,7 @@ urlpatterns = [
          DeviceGroupAvailableDeviceView.as_view(), name='group_available'),
 
     path('devices/<uuid:device_uuid>/versions/create/',
-         VersionCreateView.as_view(), name='version_create'),
+         DeviceVersionCreateView.as_view(), name='device_version_create'),
     path('devices/<uuid:device_uuid>/versions/',
-         VersionListView.as_view(), name='version_list'),
+         DeviceVersionListView.as_view(), name='device_version_list'),
 ]

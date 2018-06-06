@@ -101,7 +101,7 @@ class DeviceDeleteView(DevicePermissionMixin, LoginRequiredMixin, View):
         return redirect('device_list')
 
 
-class VersionCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
+class DeviceVersionCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
     TEMPLATE = 'device/version_create.html'
     INTEGRITY_ERROR_MESSAGE = ('Integrity error has been encountered. '
                                'Contact the service administrator.')
@@ -172,7 +172,7 @@ class VersionCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
         return redirect('version_list', device_uuid=device.uuid)
 
 
-class VersionListView(DevicePermissionMixin, LoginRequiredMixin, View):
+class DeviceVersionListView(DevicePermissionMixin, LoginRequiredMixin, View):
     TEMPLATE = 'device/version_list.html'
 
     def get(self, request, device_uuid):
@@ -352,7 +352,11 @@ class DeviceGroupAddedDeviceView(DeviceGroupsPermissionMixin,
         group = DeviceGroup.objects.get(uuid=group_uuid, is_active=True)
         devices = group.devices.exclude(is_active=False)
 
-        return render(request, self.TEMPLATE, context={'devices': devices})
+        context = {
+            'devices': devices,
+            'group': group
+        }
+        return render(request, self.TEMPLATE, context=context)
 
 
 class DeviceGroupAvailableDeviceView(DeviceGroupsPermissionMixin,
@@ -368,7 +372,11 @@ class DeviceGroupAvailableDeviceView(DeviceGroupsPermissionMixin,
         group = DeviceGroup.objects.get(uuid=group_uuid, is_active=True)
         devices = Device.objects.exclude(groups=group).exclude(is_active=False).filter(owner=group.owner)
 
-        return render(request, self.TEMPLATE, context={'devices': devices})
+        context = {
+            'devices': devices,
+            'group': group
+        }
+        return render(request, self.TEMPLATE, context=context)
 
 
 class DeviceGroupDeleteView(DeviceGroupsPermissionMixin,
