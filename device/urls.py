@@ -6,7 +6,8 @@ from device.views import (
     DeviceGroupCreateView, DeviceGroupDeleteView,
     DeviceGroupAddDeviceView, DeviceGroupRemoveDeviceView,
     DeviceGroupAddedDeviceView, DeviceGroupAvailableDeviceView,
-    DeviceGroupListView, DeviceGroupDetailsView
+    DeviceGroupListView, DeviceGroupDetailsView,
+    GroupVersionCreateView, GroupVersionListView
 )
 
 
@@ -38,4 +39,9 @@ urlpatterns = [
          DeviceVersionCreateView.as_view(), name='device_version_create'),
     path('devices/<uuid:device_uuid>/versions/',
          DeviceVersionListView.as_view(), name='device_version_list'),
+
+    path('groups/<uuid:group_uuid>/versions/create/',
+         GroupVersionCreateView.as_view(), name='group_version_create'),
+    path('groups/<uuid:group_uuid>/versions/',
+         GroupVersionListView.as_view(), name='group_version_list'),
 ]

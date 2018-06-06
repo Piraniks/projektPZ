@@ -169,10 +169,102 @@ class DeviceVersionCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
             }
             return render(request, self.TEMPLATE, context=context)
 
-        return redirect('version_list', device_uuid=device.uuid)
+        return redirect('device_version_list', device_uuid=device.uuid)
+
+
+class GroupVersionCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
+    TEMPLATE = 'device/version_create.html'
+    INTEGRITY_ERROR_MESSAGE = ('Integrity error has been encountered. '
+                               'Contact the service administrator.')
+
+    def get(self, request, device_uuid):
+        response = self.validate_user_for_device(request=request,
+                                                 device_uuid=device_uuid)
+        if response is not None:
+            return response
+
+        context = {'device_uuid': device_uuid}
+        return render(request, self.TEMPLATE, context=context)
+
+    def post(self, request, device_uuid):
+        response = self.validate_user_for_device(request=request,
+                                                 device_uuid=device_uuid)
+        if response is not None:
+            return response
+
+        device = Device.objects.get(uuid=device_uuid, is_active=True)
+        version_form = VersionForm(data=request.POST, files=request.FILES)
+
+        if version_form.is_valid() is False:
+            context = {
+                'errors': json.loads(version_form.errors.as_json()),
+                'device_uuid': device.uuid
+            }
+
+            return render(request, self.TEMPLATE,
+                          context=context,
+                          status=status.HTTP_400_BAD_REQUEST)
+
+        new_version = version_form.save(commit=False)
+        old_version = device.version
+
+        new_version.creator = request.user
+        new_version.versioned_object = device
+        new_version.previous = old_version
+
+        try:
+            with transaction.atomic():
+                new_version.save()
+
+                # Add checksum for already created file.
+                new_version.generate_checksum()
+
+                if old_version is not None:
+                    old_version.next = new_version
+                    old_version.save()
+
+                device.last_updated = timezone.now()
+                device.version = new_version
+                device.save()
+
+        except IntegrityError:
+            # If any integrity error is raised inform the user but
+            # don't blow up. Just for when we become next Facebook.
+            context = {
+                "errors": {
+                    "data": [{
+                        "message": self.INTEGRITY_ERROR_MESSAGE
+                    }],
+                },
+                'device_uuid': device.uuid
+            }
+            return render(request, self.TEMPLATE, context=context)
+
+        return redirect('device_version_list', device_uuid=device.uuid)
 
 
 class DeviceVersionListView(DevicePermissionMixin, LoginRequiredMixin, View):
+    TEMPLATE = 'device/version_list.html'
+
+    def get(self, request, device_uuid):
+        response = self.validate_user_for_device(request=request,
+                                                 device_uuid=device_uuid)
+        if response is not None:
+            return response
+
+        device = Device.objects.get(uuid=device_uuid, is_active=True)
+
+        device_content_type = ContentType.objects.get_for_model(device)
+        devices = Version.objects.filter(object_id=device.id,
+                                         content_type=device_content_type)
+        context = {
+            'versions': devices,
+            'device': device
+        }
+        return render(request, self.TEMPLATE, context=context)
+
+
+class GroupVersionListView(DevicePermissionMixin, LoginRequiredMixin, View):
     TEMPLATE = 'device/version_list.html'
 
     def get(self, request, device_uuid):
