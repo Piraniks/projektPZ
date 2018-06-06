@@ -19,9 +19,7 @@
 
             {% for device in devices %}
                 <a href="{% url 'device_details' device_uuid=device.uuid %}">{{ device.name }}</a><br>
-                {{ device.uuid }}<br>
-                {{ device.owner.username}}<br>
-                {{ device.is_active}} <br><br>
+                {{ device.uuid }}<br><br>
             {% endfor %}
 
         {% else %}
@@ -29,16 +27,6 @@
             <p>Whoops! You have no groups added yet &nbsp;<i class="icon fa-frown-o fa-lg"></i></p>
 
         {% endif %}
-
-        <div class="row uniform">
-            <div class="12u">
-                <ul class="actions align-center">
-                    <ul class="actions">
-                        <li><br><a href="{% url 'group_create' %}" class="button font2 icon fa-plus">Add new group</a></li>
-                    </ul>
-                </ul>
-            </div>
-        </div>
 
     </section>
 
