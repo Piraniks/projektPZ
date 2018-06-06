@@ -466,8 +466,12 @@ class DeviceGroupAddedDeviceView(DeviceGroupsPermissionMixin,
         group = DeviceGroup.objects.get(uuid=group_uuid, is_active=True)
         devices = group.devices.exclude(is_active=False)
 
+        paginator = Paginator(devices, 5)
+        page = request.GET.get('page', 1)
+        paginated_devices = paginator.get_page(page)
+
         context = {
-            'devices': devices,
+            'devices': paginated_devices,
             'group': group
         }
         return render(request, self.TEMPLATE, context=context)
@@ -486,8 +490,12 @@ class DeviceGroupAvailableDeviceView(DeviceGroupsPermissionMixin,
         group = DeviceGroup.objects.get(uuid=group_uuid, is_active=True)
         devices = Device.objects.exclude(groups=group).exclude(is_active=False).filter(owner=group.owner)
 
+        paginator = Paginator(devices, 5)
+        page = request.GET.get('page', 1)
+        paginated_devices = paginator.get_page(page)
+
         context = {
-            'devices': devices,
+            'devices': paginated_devices,
             'group': group
         }
         return render(request, self.TEMPLATE, context=context)
