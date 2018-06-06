@@ -3791,6 +3791,11 @@
         top: 4em;
     }
 
+	.paginator-arrow{
+		color: #666;
+		margin: 3px;
+	}
+
     .error {
         color: #ff4747;
     }
@@ -3824,12 +3829,18 @@
     }
 
 	.button-left {
+
 		margin-right: 10em;
 	}
 
 	.button-right {
-		margin-top: -4.9em;
+		margin-top: -4.85em;
 		margin-left: 10em;
+	}
+
+	.button.button-group{
+		width: 215px;
+		margin-bottom: -1em;
 	}
 
 	.button-link {

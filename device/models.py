@@ -108,12 +108,50 @@ class DeviceGroup(models.Model):
     last_edited = models.DateTimeField(auto_now=True)
 
     last_updated = models.DateTimeField(null=True, blank=True)
-    version = models.OneToOneField(Version, on_delete=models.SET_NULL,
-                                   null=True, blank=True)
+    _version = models.OneToOneField(Version, on_delete=models.SET_NULL,
+                                    null=True, blank=True)
 
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     devices = models.ManyToManyField(Device, related_name='groups', blank=True)
 
+    def __init__(self, *args, **kwargs):
+        self._updated_devices = []
+        super().__init__(*args, **kwargs)
+
+    @property
+    def version(self):
+        return self._version
+
+    @version.setter
+    def version(self, version):
+        self._version = version
+        for device in self.devices.filter(is_active=True):
+            new_version = Version.objects.create(name=version.name,
+                                                 file=version.file,
+                                                 file_checksum=version.file_checksum)
+
+            last_version = device.version
+
+            if last_version:
+                new_version.previous = last_version
+
+            device.version = new_version
+            self._updated_devices.append(device)
+
     def save(self, *args, **kwargs):
+        for device in self._updated_devices:
+            device.last_updated = timezone.now()
+            device.save()
+
+            new_version = device.version
+
+            old_version = new_version.previous
+            if old_version:
+                old_version.next = new_version
+                old_version.save()
+
+            new_version.versioned_object = device
+            new_version.save()
+
         update_device_group(self.uuid)
         return super().save(*args, **kwargs)

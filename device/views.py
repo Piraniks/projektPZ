@@ -7,6 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.views import View
 from django.db import transaction, IntegrityError
 from django.utils import timezone
+from django.core.paginator import Paginator
 
 from projektPZ import status
 
@@ -58,7 +59,12 @@ class DeviceListView(LoginRequiredMixin, View):
     def get(self, request):
         devices = Device.objects.filter(owner=request.user,
                                         is_active=True).order_by('timestamp')
-        return render(request, self.TEMPLATE, context={'devices': devices})
+
+        paginator = Paginator(devices, 5)
+        page = request.GET.get('page', 1)
+        paginated_devices = paginator.get_page(page)
+
+        return render(request, self.TEMPLATE, context={'devices': paginated_devices})
 
 
 class DeviceCreateView(LoginRequiredMixin, View):
@@ -258,8 +264,13 @@ class DeviceVersionListView(DevicePermissionMixin, LoginRequiredMixin, View):
         device_content_type = ContentType.objects.get_for_model(device)
         versions = Version.objects.filter(object_id=device.id,
                                           content_type=device_content_type)
+
+        paginator = Paginator(versions, 5)
+        page = request.GET.get('page', 1)
+        paginated_versions = paginator.get_page(page)
+
         context = {
-            'versions': versions,
+            'versions': paginated_versions,
             'device': device
         }
         return render(request, self.TEMPLATE, context=context)
@@ -280,8 +291,13 @@ class GroupVersionListView(DeviceGroupsPermissionMixin,
         group_content_type = ContentType.objects.get_for_model(group)
         versions = Version.objects.filter(object_id=group.id,
                                           content_type=group_content_type)
+
+        paginator = Paginator(versions, 5)
+        page = request.GET.get('page', 1)
+        paginated_versions = paginator.get_page(page)
+
         context = {
-            'versions': versions,
+            'versions': paginated_versions,
             'group': group
         }
         return render(request, self.TEMPLATE, context=context)
@@ -294,7 +310,11 @@ class DeviceGroupListView(LoginRequiredMixin, View):
         groups = DeviceGroup.objects.filter(owner=request.user,
                                             is_active=True).order_by('timestamp')
 
-        context = {'groups': groups}
+        paginator = Paginator(groups, 5)
+        page = request.GET.get('page', 1)
+        paginated_groups = paginator.get_page(page)
+
+        context = {'groups': paginated_groups}
         return render(request, self.TEMPLATE, context=context)
 
 
@@ -446,8 +466,12 @@ class DeviceGroupAddedDeviceView(DeviceGroupsPermissionMixin,
         group = DeviceGroup.objects.get(uuid=group_uuid, is_active=True)
         devices = group.devices.exclude(is_active=False)
 
+        paginator = Paginator(devices, 5)
+        page = request.GET.get('page', 1)
+        paginated_devices = paginator.get_page(page)
+
         context = {
-            'devices': devices,
+            'devices': paginated_devices,
             'group': group
         }
         return render(request, self.TEMPLATE, context=context)
@@ -466,8 +490,12 @@ class DeviceGroupAvailableDeviceView(DeviceGroupsPermissionMixin,
         group = DeviceGroup.objects.get(uuid=group_uuid, is_active=True)
         devices = Device.objects.exclude(groups=group).exclude(is_active=False).filter(owner=group.owner)
 
+        paginator = Paginator(devices, 5)
+        page = request.GET.get('page', 1)
+        paginated_devices = paginator.get_page(page)
+
         context = {
-            'devices': devices,
+            'devices': paginated_devices,
             'group': group
         }
         return render(request, self.TEMPLATE, context=context)
