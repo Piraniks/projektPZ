@@ -130,14 +130,26 @@ class DeviceGroup(models.Model):
                                                  file=version.file,
                                                  file_checksum=version.file_checksum)
 
+            last_version = device.version
+
+            if last_version:
+                new_version.previous = last_version
+
             device.version = new_version
             self._updated_devices.append(device)
 
     def save(self, *args, **kwargs):
         for device in self._updated_devices:
+            device.last_updated = timezone.now()
             device.save()
 
             new_version = device.version
+
+            old_version = new_version.previous
+            if old_version:
+                old_version.next = new_version
+                old_version.save()
+
             new_version.versioned_object = device
             new_version.save()
 
