@@ -102,7 +102,7 @@ class DeviceDeleteView(DevicePermissionMixin, LoginRequiredMixin, View):
 
 
 class DeviceVersionCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
-    TEMPLATE = 'device/version_create.html'
+    TEMPLATE = 'device/device_version_create.html'
     INTEGRITY_ERROR_MESSAGE = ('Integrity error has been encountered. '
                                'Contact the service administrator.')
 
@@ -173,7 +173,7 @@ class DeviceVersionCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
 
 
 class GroupVersionCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
-    TEMPLATE = 'device/version_create.html'
+    TEMPLATE = 'device/group_version_create.html'
     INTEGRITY_ERROR_MESSAGE = ('Integrity error has been encountered. '
                                'Contact the service administrator.')
 
@@ -244,7 +244,7 @@ class GroupVersionCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
 
 
 class DeviceVersionListView(DevicePermissionMixin, LoginRequiredMixin, View):
-    TEMPLATE = 'device/version_list.html'
+    TEMPLATE = 'device/device_version_list.html'
 
     def get(self, request, device_uuid):
         response = self.validate_user_for_device(request=request,
@@ -265,7 +265,7 @@ class DeviceVersionListView(DevicePermissionMixin, LoginRequiredMixin, View):
 
 
 class GroupVersionListView(DevicePermissionMixin, LoginRequiredMixin, View):
-    TEMPLATE = 'device/version_list.html'
+    TEMPLATE = 'device/group_version_list.html'
 
     def get(self, request, device_uuid):
         response = self.validate_user_for_device(request=request,
