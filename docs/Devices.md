@@ -17,7 +17,7 @@ Ciąg znaków pod nazwą każdego z urządzeń to wygenerowany universally uniqu
 urządzeń znajduje się przycisk 'Add new device' będący odnośnikiem do strony dodawania nowego urządzenia.
 Jeżeli użytkownik nie dodał jeszcze żadnego urządzenia do swojej listy, na stronie z listą 
 zamiast ww. informacji znajduje się powiadomienie "Whoops! You have no devices added yet" i 
-przycisk będący odnodo dodawania urządzenia.
+przycisk będący odnośnikiem do strony dodawania urządzenia.
 
 ## Dodawanie urządzenia
 Formularz dodawania urządzenia jest prosty - należy w nim podać nazwę dodawanego 
