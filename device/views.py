@@ -241,7 +241,7 @@ class GroupVersionCreateView(DeviceGroupsPermissionMixin,
             }
             return render(request, self.TEMPLATE, context=context)
 
-        return redirect('device_version_list', device_uuid=group.uuid)
+        return redirect('group_version_list', device_uuid=group.uuid)
 
 
 class DeviceVersionListView(DevicePermissionMixin, LoginRequiredMixin, View):
@@ -395,7 +395,7 @@ class DeviceGroupAddDeviceView(DeviceGroupsPermissionMixin,
         if device not in group.devices.all():
             group.devices.add(device)
 
-        return redirect('group_details', group_uuid=group_uuid)
+        return redirect('group_added', group_uuid=group_uuid)
 
 
 class DeviceGroupRemoveDeviceView(DeviceGroupsPermissionMixin,
@@ -430,7 +430,7 @@ class DeviceGroupRemoveDeviceView(DeviceGroupsPermissionMixin,
         if device in group.devices.all():
             group.devices.remove(device)
 
-        return redirect('group_details', group_uuid=group_uuid)
+        return redirect('group_added', group_uuid=group_uuid)
 
 
 class DeviceGroupAddedDeviceView(DeviceGroupsPermissionMixin,

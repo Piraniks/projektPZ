@@ -745,7 +745,7 @@ class DeviceGroupRemoveDeviceTestCase(TransactionTestCase):
         device = Device.objects.filter(groups__uuid=self.device_group.uuid).first()
 
         self.assertRedirects(response,
-                             reverse('group_details',
+                             reverse('group_added',
                                      kwargs={'group_uuid': self.device_group.uuid})
                              )
         self.assertIsNone(device)
@@ -843,7 +843,7 @@ class DeviceGroupAddDeviceTestCase(TransactionTestCase):
         device = Device.objects.filter(groups__uuid=self.device_group.uuid).first()
 
         self.assertRedirects(response,
-                             reverse('group_details',
+                             reverse('group_added',
                                      kwargs={'group_uuid': self.device_group.uuid})
                              )
         self.assertIsNotNone(device)
