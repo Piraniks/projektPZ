@@ -172,33 +172,34 @@ class DeviceVersionCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
         return redirect('device_version_list', device_uuid=device.uuid)
 
 
-class GroupVersionCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
+class GroupVersionCreateView(DeviceGroupsPermissionMixin,
+                             LoginRequiredMixin, View):
     TEMPLATE = 'device/group_version_create.html'
     INTEGRITY_ERROR_MESSAGE = ('Integrity error has been encountered. '
                                'Contact the service administrator.')
 
-    def get(self, request, device_uuid):
-        response = self.validate_user_for_device(request=request,
-                                                 device_uuid=device_uuid)
+    def get(self, request, group_uuid):
+        response = self.validate_user_for_group(request=request,
+                                                group_uuid=group_uuid)
         if response is not None:
             return response
 
-        context = {'device_uuid': device_uuid}
+        context = {'group_uuid': group_uuid}
         return render(request, self.TEMPLATE, context=context)
 
-    def post(self, request, device_uuid):
-        response = self.validate_user_for_device(request=request,
-                                                 device_uuid=device_uuid)
+    def post(self, request, group_uuid):
+        response = self.validate_user_for_group(request=request,
+                                                group_uuid=group_uuid)
         if response is not None:
             return response
 
-        device = Device.objects.get(uuid=device_uuid, is_active=True)
+        group = DeviceGroup.objects.get(uuid=group_uuid, is_active=True)
         version_form = VersionForm(data=request.POST, files=request.FILES)
 
         if version_form.is_valid() is False:
             context = {
                 'errors': json.loads(version_form.errors.as_json()),
-                'device_uuid': device.uuid
+                'group_uuid': group.uuid
             }
 
             return render(request, self.TEMPLATE,
@@ -206,10 +207,10 @@ class GroupVersionCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
                           status=status.HTTP_400_BAD_REQUEST)
 
         new_version = version_form.save(commit=False)
-        old_version = device.version
+        old_version = group.version
 
         new_version.creator = request.user
-        new_version.versioned_object = device
+        new_version.versioned_object = group
         new_version.previous = old_version
 
         try:
@@ -223,9 +224,9 @@ class GroupVersionCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
                     old_version.next = new_version
                     old_version.save()
 
-                device.last_updated = timezone.now()
-                device.version = new_version
-                device.save()
+                group.last_updated = timezone.now()
+                group.version = new_version
+                group.save()
 
         except IntegrityError:
             # If any integrity error is raised inform the user but
@@ -236,11 +237,11 @@ class GroupVersionCreateView(DevicePermissionMixin, LoginRequiredMixin, View):
                         "message": self.INTEGRITY_ERROR_MESSAGE
                     }],
                 },
-                'device_uuid': device.uuid
+                'group_uuid': group.uuid
             }
             return render(request, self.TEMPLATE, context=context)
 
-        return redirect('device_version_list', device_uuid=device.uuid)
+        return redirect('device_version_list', device_uuid=group.uuid)
 
 
 class DeviceVersionListView(DevicePermissionMixin, LoginRequiredMixin, View):
@@ -255,32 +256,33 @@ class DeviceVersionListView(DevicePermissionMixin, LoginRequiredMixin, View):
         device = Device.objects.get(uuid=device_uuid, is_active=True)
 
         device_content_type = ContentType.objects.get_for_model(device)
-        devices = Version.objects.filter(object_id=device.id,
-                                         content_type=device_content_type)
+        versions = Version.objects.filter(object_id=device.id,
+                                          content_type=device_content_type)
         context = {
-            'versions': devices,
+            'versions': versions,
             'device': device
         }
         return render(request, self.TEMPLATE, context=context)
 
 
-class GroupVersionListView(DevicePermissionMixin, LoginRequiredMixin, View):
+class GroupVersionListView(DeviceGroupsPermissionMixin,
+                           LoginRequiredMixin, View):
     TEMPLATE = 'device/group_version_list.html'
 
-    def get(self, request, device_uuid):
-        response = self.validate_user_for_device(request=request,
-                                                 device_uuid=device_uuid)
+    def get(self, request, group_uuid):
+        response = self.validate_user_for_group(request=request,
+                                                group_uuid=group_uuid)
         if response is not None:
             return response
 
-        device = Device.objects.get(uuid=device_uuid, is_active=True)
+        group = DeviceGroup.objects.get(uuid=group_uuid, is_active=True)
 
-        device_content_type = ContentType.objects.get_for_model(device)
-        devices = Version.objects.filter(object_id=device.id,
-                                         content_type=device_content_type)
+        group_content_type = ContentType.objects.get_for_model(group)
+        versions = Version.objects.filter(object_id=group.id,
+                                          content_type=group_content_type)
         context = {
-            'versions': devices,
-            'device': device
+            'versions': versions,
+            'group': group
         }
         return render(request, self.TEMPLATE, context=context)
 
