@@ -17,9 +17,20 @@
 
         {% if devices %}
 
-            {% for device in devices %}
-                <a href="{% url 'device_details' device_uuid=device.uuid %}">{{ device.name }}</a><br>
-                {{ device.uuid }}<br><br>
+          {% for device in devices %}
+                <div class="row" >
+                    <div class="10u 12u(mobilep)">
+                     <a href="{% url 'device_details' device_uuid=device.uuid %}">{{ device.name }}</a><br>
+                {{ device.uuid }}
+                    </div>
+                <div class="2u 12u(mobilep)">
+                <form method="post" action="{% url 'group_delete' group_uuid=group.uuid %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="device_uuid" id="device_uuid" value="{{ device.uuid }}">
+                    <button type="submit" class="button-link icon fa-minus-circle "/>
+                </form>
+                </div>
+                </div>
             {% endfor %}
 
         {% else %}
