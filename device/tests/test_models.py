@@ -1,7 +1,7 @@
 from django.test import TransactionTestCase
 
 from custom_auth.models import User
-from device.models import Device, Version
+from device.models import Device, Version, DeviceGroup
 
 
 class DeviceTestCase(TransactionTestCase):
@@ -77,3 +77,46 @@ class DeviceTestCase(TransactionTestCase):
         result = self.device.raise_version()
 
         self.assertTrue(result)
+
+
+class DeviceGroupTestCase(TransactionTestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='user',
+                                             password='password')
+
+        self.device_group = DeviceGroup.objects.create(name='device_group',
+                                                       owner=self.user)
+
+    def test_if_versions_for_devices_in_group_is_not_created_needlessly(self):
+        device = Device.objects.create(name='device',
+                                       owner=self.user,
+                                       ip_address='192.168.1.1')
+
+        self.device_group.devices.add(device)
+        self.device_group.save()
+
+        device_after_save = Device.objects.get(pk=device.pk)
+
+        self.assertIsNone(device_after_save.version)
+
+
+    def test_add_group_version_creates_device_versions(self):
+        device = Device.objects.create(name='device',
+                                       owner=self.user,
+                                       ip_address='192.168.1.1')
+
+        self.device_group.devices.add(device)
+        self.device_group.save()
+
+        new_version = Version.objects.create(versioned_object=self.device_group,
+                                             name='new_version')
+
+        self.device_group.version = new_version
+        self.device_group.save()
+
+        device_after_save = Device.objects.get(pk=device.pk)
+
+        self.assertIsNotNone(device_after_save.version)
+        self.assertEqual(device_after_save.version.name, new_version.name)
+        self.assertEqual(device_after_save.version.file_checksum,
+                         new_version.file_checksum)
